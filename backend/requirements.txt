@@ -1,3 +1,13 @@
+fastapi
+uvicorn
+pymupdf
+pdfplumber
+sentence-transformers
+faiss-cpu
+numpy
+python-dotenv
+langchain
+langchain-community
 # LexSphere Hybrid RAG retrieval pipeline (Python 3.10+)
 pymupdf>=1.24
 sentence-transformers>=3.0
