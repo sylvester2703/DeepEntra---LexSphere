@@ -32,14 +32,11 @@ from rag import HybridRAGPipeline
 from rag.bm25_retriever import tokenize
 
 from .answer_generator import (
-    GeneratedAnswer,
-    claims_from_llm_answer,
-    extractive_answer,
-    generate_with_ollama,
+    grounded_answer,
     ollama_status,
+    ollama_warmup,
     prose_sentences,
     sigmoid,
-    verify_claims,
 )
 
 logger = logging.getLogger(__name__)
@@ -95,6 +92,14 @@ def start_background_warmup() -> None:
         except Exception as exc:  # reported through /api/health
             _state["error"] = str(exc)
             logger.exception("Hybrid RAG warm-up failed")
+            return
+        connected, model = ollama_status()
+        if connected and model:
+            try:
+                ollama_warmup(model)  # outside the lock: queries can run meanwhile
+                logger.info("Ollama model %s loaded", model)
+            except Exception as exc:
+                logger.warning("Could not preload Ollama model %s: %s", model, exc)
 
     threading.Thread(target=_warm, name="rag-warmup", daemon=True).start()
 
@@ -376,19 +381,12 @@ def research_query(req: ResearchQueryRequest) -> dict:
         stats = dict(p.last_retrieval_stats)
         t_ret = time.perf_counter()
 
-        generated: GeneratedAnswer | None = None
         connected, model = ollama_status()
-        if connected and model and passages:
-            try:
-                text, claims = claims_from_llm_answer(generate_with_ollama(query, passages, model), len(passages))
-                generated = GeneratedAnswer(text, claims, model=model)
-            except Exception as exc:
-                logger.warning("Ollama generation failed, using extractive answer: %s", exc)
-        if generated is None:
-            generated = extractive_answer(query, passages, p.reranker)
-        t_gen = time.perf_counter()
-        checks = verify_claims(generated.claims, passages, p.reranker)
+        generated, checks, answer_note = grounded_answer(
+            query, passages, p.reranker, model if connected else None
+        )
         t_ver = time.perf_counter()
+        t_gen = t_ret + generated.generation_ms / 1000
 
     id_by_document = {r["document"]: r["id"] for r in docs.values()}
     supporting = []
@@ -452,7 +450,7 @@ def research_query(req: ResearchQueryRequest) -> dict:
             "reranked_passages_count": len(passages),
             "ollama_model": (
                 f"{generated.model} (Local Ollama)" if generated.model != "extractive"
-                else "Extractive answer (Ollama not running)"
+                else f"Extractive answer ({answer_note})"
             ),
             "generation_time_ms": ms(t_ret, t_gen),
             "verification_time_ms": ms(t_gen, t_ver),

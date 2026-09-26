@@ -14,18 +14,24 @@ cross-encoder (a relevance check, not formal entailment).
 from __future__ import annotations
 
 import json
+import logging
 import math
 import os
 import re
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
 
 from rag.chunker import split_sentences
+from rag.embeddings import word_windows
 from rag.reranker import CrossEncoderReranker
 
+logger = logging.getLogger(__name__)
+
 OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434").rstrip("/")
-OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "llama3:8b")
+# llama3.2:3b is fast enough on a CPU-only laptop; set OLLAMA_MODEL=llama3:8b on stronger machines
+OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2:3b")
 OLLAMA_TIMEOUT_S = float(os.environ.get("OLLAMA_TIMEOUT_S", "180"))
 
 # Cross-encoder logit thresholds
@@ -67,7 +73,10 @@ class GeneratedAnswer:
 
 # --------------------------------------------------------------------- Ollama
 def ollama_status(timeout: float = 1.5) -> tuple[bool, str | None]:
-    """(reachable, model to use). Uses OLLAMA_MODEL if installed, else the first model found."""
+    """(reachable, model to use). Uses OLLAMA_MODEL if installed, else the first model found.
+    Set OLLAMA_ENABLED=0 to always use extractive answers (e.g. in tests)."""
+    if os.environ.get("OLLAMA_ENABLED", "1").lower() in {"0", "false", "no"}:
+        return False, None
     try:
         with urllib.request.urlopen(f"{OLLAMA_BASE_URL}/api/tags", timeout=timeout) as resp:
             models = [m.get("name", "") for m in json.load(resp).get("models", [])]
@@ -81,60 +90,159 @@ def ollama_status(timeout: float = 1.5) -> tuple[bool, str | None]:
     return True, next((m for m in models if m.split(":")[0] == base), models[0])
 
 
-def _ollama_prompt(query: str, passages: list[dict]) -> str:
+SYSTEM_PROMPT = (
+    "You are LexSphere, a legal research assistant for Indian law. You answer ONLY from "
+    "the numbered judgment passages the user gives you. You never use outside knowledge "
+    "and never mention any case, statute or citation that is not in the passages. "
+    "Every sentence you write ends with the number of the passage that supports it, "
+    "like [1] or [2]. If the passages do not answer the question, reply exactly: "
+    "NOT_COVERED"
+)
+
+
+def build_llm_context(
+    query: str, passages: list[dict], reranker: CrossEncoderReranker, max_passages: int = 3
+) -> list[dict]:
+    """Relevant passages only, each trimmed to its most relevant ~220-word window, so
+    the prompt stays small (fast on CPU, and within the model's context window)."""
+    relevant = [i for i, p in enumerate(passages) if p["retrieval_score"] >= RELEVANT_PASSAGE_SCORE]
+    contexts = []
+    for i in relevant[:max_passages]:
+        windows = word_windows(passages[i]["text"], 220, 150)
+        scores = reranker.score_pairs([(query, w) for w in windows]) if len(windows) > 1 else [0.0]
+        best = windows[max(range(len(windows)), key=scores.__getitem__)]
+        contexts.append({"index": i, "case_name": passages[i]["case_name"],
+                         "citation": passages[i].get("citation"), "text": best})
+    return contexts
+
+
+def _user_prompt(query: str, contexts: list[dict]) -> str:
     blocks = []
-    for n, p in enumerate(passages, start=1):
-        ref = ", ".join(x for x in (p.get("citation"), f"p. {p['page_number']}") if x)
-        blocks.append(f"[{n}] {p['case_name']} ({ref})\n{p['text']}")
-    context = "\n\n".join(blocks)
+    for n, c in enumerate(contexts, start=1):
+        ref = f" ({c['citation']})" if c.get("citation") else ""
+        blocks.append(f"[{n}] {c['case_name']}{ref}:\n{c['text']}")
     return (
-        "You are LexSphere, a legal research assistant for Indian law.\n"
-        "Answer the question using ONLY the numbered judgment passages below.\n"
-        "Rules:\n"
-        "- After every sentence, cite the passage it relies on as [n] (e.g. [1] or [2]).\n"
-        "- Do not cite a passage that does not support the sentence.\n"
-        "- Do not use outside knowledge, and never invent case names or citations.\n"
-        "- If the passages do not answer the question, say so plainly.\n"
-        "- Be concise: at most 2 short paragraphs.\n\n"
-        f"PASSAGES:\n{context}\n\nQUESTION: {query}\n\nANSWER:"
+        "PASSAGES:\n\n" + "\n\n".join(blocks) + "\n\n"
+        f"QUESTION: {query}\n\n"
+        "Answer in 2 to 4 sentences using only these passages. "
+        "End every sentence with its passage number, e.g. [1]."
     )
 
 
-def generate_with_ollama(query: str, passages: list[dict], model: str) -> str:
+def generate_with_ollama(query: str, contexts: list[dict], model: str) -> str:
     body = json.dumps(
         {
             "model": model,
-            "prompt": _ollama_prompt(query, passages),
+            "messages": [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": _user_prompt(query, contexts)},
+            ],
             "stream": False,
-            "options": {"temperature": 0.1},
+            "keep_alive": "30m",  # keep the model in memory between questions
+            "options": {"temperature": 0.1, "num_predict": 260, "num_ctx": 4096},
         }
     ).encode("utf-8")
+    req = urllib.request.Request(
+        f"{OLLAMA_BASE_URL}/api/chat", data=body, headers={"Content-Type": "application/json"}
+    )
+    with urllib.request.urlopen(req, timeout=OLLAMA_TIMEOUT_S) as resp:
+        return json.load(resp).get("message", {}).get("content", "").strip()
+
+
+def ollama_warmup(model: str) -> None:
+    """Load the model into memory so the first question does not pay the load time."""
+    body = json.dumps({"model": model, "prompt": "", "keep_alive": "30m"}).encode("utf-8")
     req = urllib.request.Request(
         f"{OLLAMA_BASE_URL}/api/generate", data=body, headers={"Content-Type": "application/json"}
     )
     with urllib.request.urlopen(req, timeout=OLLAMA_TIMEOUT_S) as resp:
-        return json.load(resp).get("response", "").strip()
+        resp.read()
 
 
-def claims_from_llm_answer(answer: str, passage_count: int) -> tuple[str, list[Claim]]:
-    """One claim per cited sentence. Markers are renumbered so each claim has its own
-    marker; the frontend links every [n] chip to exactly one citation card."""
+def claims_from_llm_answer(answer: str, contexts: list[dict]) -> tuple[str, list[Claim]]:
+    """Keep only sentences that cite a passage; one claim per citation. Markers are
+    renumbered so every [n] chip in the UI maps to exactly one citation card."""
     claims: list[Claim] = []
     paragraphs_out = []
     for paragraph in re.split(r"\n\s*\n", answer.strip()):
         sentences_out = []
         for sentence in split_sentences(paragraph) or [paragraph]:
             cited = [int(n) - 1 for n in re.findall(r"\[(\d+)\]", sentence)]
-            cited = [i for i in dict.fromkeys(cited) if 0 <= i < passage_count]
-            bare = re.sub(r"\s*\[\d+\]", "", sentence).strip()
+            cited = [i for i in dict.fromkeys(cited) if 0 <= i < len(contexts)]
+            if not cited:
+                continue  # uncited sentence: not grounded, so it is not shown
+            bare = re.sub(r"\s*\[\d+(?:\s*,\s*\d+)*\]", "", sentence).strip(" *-")
+            bare = re.sub(r"\s*[,;:]\s*([.?!]?)$", r"\1", bare)  # "bail, [1]." -> "bail."
+            if bare and bare[-1] not in ".?!":
+                bare += "."
             markers = []
-            for idx in cited:
+            for i in cited:
                 marker = f"[{len(claims) + 1}]"
-                claims.append(Claim(marker, bare, idx))
+                claims.append(Claim(marker, bare, contexts[i]["index"]))
                 markers.append(marker)
-            sentences_out.append(f"{bare} {' '.join(markers)}".strip())
-        paragraphs_out.append(" ".join(sentences_out))
+            sentences_out.append(f"{bare} {' '.join(markers)}")
+        if sentences_out:
+            paragraphs_out.append(" ".join(sentences_out))
     return "\n\n".join(paragraphs_out), claims
+
+
+_REPORTED = re.compile(
+    r"\(\d{4}\)\s*\d+\s+SCC\s+\d+|AIR\s+\d{4}\s+SC\s+\d+|\d{4}\s+INSC\s+\d+|\d{4}\s+SCC\s+OnLine\s+\w+\s+\d+",
+    re.IGNORECASE,
+)
+_CASE_NAME = re.compile(r"\b([A-Z][\w.&@]*(?:\s+[A-Z][\w.&@]*){0,5})\s+(?:v\.|vs\.?|versus)\s+([A-Z][\w.&()]*)")
+
+
+def foreign_authorities(answer: str, contexts: list[dict], passages: list[dict]) -> list[str]:
+    """Citations or case names in the answer that do not come from the retrieved passages."""
+    known = " ".join(
+        [c["text"] for c in contexts] + [p["case_name"] + " " + (p.get("citation") or "") for p in passages]
+    ).lower()
+    known_compact = re.sub(r"\s+", " ", known)
+    foreign = [c for c in _REPORTED.findall(answer) if re.sub(r"\s+", " ", c.lower()) not in known_compact]
+    for first_party, _ in _CASE_NAME.findall(answer):
+        # The last word of the party name is the distinctive one ("Per Mohd. Muslim" -> "muslim")
+        words = [w for w in re.findall(r"[a-z]+", first_party.lower()) if len(w) > 2]
+        if words and words[-1] not in known_compact:
+            foreign.append(first_party)
+    return foreign
+
+
+def grounded_answer(
+    query: str, passages: list[dict], reranker: CrossEncoderReranker, model: str | None
+) -> tuple[GeneratedAnswer, list[dict], str]:
+    """Best safe answer: the LLM answer if it passes every check, else the extractive one.
+    Returns (answer, citation checks, note explaining which path was used)."""
+    started = time.perf_counter()
+    note = "Ollama not running"
+    contexts = build_llm_context(query, passages, reranker) if model else []
+    if model and not contexts:
+        note = "no relevant passages for the model"
+    elif model:
+        try:
+            raw = generate_with_ollama(query, contexts, model)
+            generation_ms = int((time.perf_counter() - started) * 1000)
+            text, claims = claims_from_llm_answer(raw, contexts)
+            foreign = foreign_authorities(raw, contexts, passages)
+            if "NOT_COVERED" in raw and not claims:
+                note = "model found the passages insufficient"
+            elif foreign:
+                note = "model answer cited authorities not in the corpus: " + ", ".join(foreign[:3])
+            elif not claims:
+                note = "model answer had no passage citations"
+            else:
+                checks = verify_claims(claims, passages, reranker)
+                if any(c["status"] == "unverified" for c in checks):
+                    note = "model answer contained statements its sources do not support"
+                else:
+                    answer = GeneratedAnswer(text, claims, model=model, generation_ms=generation_ms)
+                    return answer, checks, "generated by " + model
+        except Exception as exc:  # timeout, Ollama error: fall back safely
+            note = f"Ollama error: {exc}"
+        logger.warning("Using extractive answer (%s)", note)
+    generated = extractive_answer(query, passages, reranker)
+    generated.generation_ms = int((time.perf_counter() - started) * 1000)
+    return generated, verify_claims(generated.claims, passages, reranker), note
 
 
 # ----------------------------------------------------------------- extractive

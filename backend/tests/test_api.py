@@ -2,11 +2,14 @@
 
     pytest tests/test_api.py -q
 
-Uses the real judgment PDFs and the index in backend/data/indexes.
+Uses the real judgment PDFs and the index in backend/data/indexes. Answers are
+extractive (OLLAMA_ENABLED=0) so results are fast and deterministic; the Ollama
+path has its own test, which is skipped when Ollama is not running.
 """
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -17,12 +20,44 @@ BACKEND_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_DIR))
 
 from main import app  # noqa: E402
+from api import answer_generator  # noqa: E402
 
 
 @pytest.fixture(scope="module")
 def client():
+    os.environ["OLLAMA_ENABLED"] = "0"
     with TestClient(app) as c:
         yield c
+    os.environ.pop("OLLAMA_ENABLED", None)
+
+
+def test_guardrails_drop_uncited_sentences_and_flag_outside_authorities():
+    contexts = [{"index": 0, "case_name": "Mohd. Muslim v. State", "citation": "2023 INSC 308",
+                 "text": "Statutory restrictions on bail cannot override the right to a speedy trial under Article 21."}]
+    passages = [{"case_name": "Mohd. Muslim v. State", "citation": "2023 INSC 308", "text": contexts[0]["text"]}]
+    raw = ("Article 21 guarantees life and liberty. "
+           "Bail restrictions cannot override the right to a speedy trial, [1]. "
+           "This follows Maneka Gandhi v. Union of India (2017) 16 SCC 1 [1].")
+    text, claims = answer_generator.claims_from_llm_answer(raw, contexts)
+    assert "guarantees life and liberty" not in text  # uncited sentence removed
+    assert "speedy trial. [1]" in text  # stray comma cleaned
+    assert len(claims) == 2
+    foreign = answer_generator.foreign_authorities(raw, contexts, passages)
+    assert any("SCC" in f for f in foreign) and any("Maneka" in f for f in foreign)
+    assert answer_generator.foreign_authorities("Per Mohd. Muslim v. State [1].", contexts, passages) == []
+
+
+def test_ollama_answer_is_grounded_or_rejected(client, monkeypatch):
+    monkeypatch.setenv("OLLAMA_ENABLED", "1")
+    connected, model = answer_generator.ollama_status()
+    if not (connected and model):
+        pytest.skip("Ollama is not running")
+    body = client.post("/api/research/query", json={"query": "Explain Article 21 judgement"}).json()
+    # Either a model answer where every sentence is cited and supported, or the safe fallback
+    assert body["citations"], body["grounded_answer"]
+    assert all(c["verification_status"] in {"verified", "partially_verified"} for c in body["citations"])
+    assert "Maneka" not in body["grounded_answer"]  # no outside authorities
+    assert "Muslim" in body["citations"][0]["source_document_title"]
 
 
 def test_health_reports_index(client):
