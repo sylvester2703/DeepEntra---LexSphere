@@ -18,6 +18,8 @@ export type PipelineStage =
   | 'verifying' 
   | 'completed';
 
+export type NavPage = 'home' | 'workspace' | 'corpus' | 'about' | 'contact';
+
 interface LegalResearchContextType {
   documents: LegalDocument[];
   selectedDocIds: string[];
@@ -32,8 +34,10 @@ interface LegalResearchContextType {
   selectedCitationForModal: CitationItem | null;
   isBackendStatusModalOpen: boolean;
   queryError: string | null;
+  activeNavPage: NavPage;
   
   // Actions
+  setActiveNavPage: (page: NavPage) => void;
   toggleMode: (mode: 'demo' | 'live') => void;
   refreshHealth: () => Promise<void>;
   refreshDocuments: () => Promise<void>;
@@ -63,6 +67,7 @@ export const LegalResearchProvider: React.FC<{ children: ReactNode }> = ({ child
   const [activeQuestionId, setActiveQuestionId] = useState<string | null>('q1');
   const [highlightedCitationId, setHighlightedCitationId] = useState<string | null>(null);
   const [queryError, setQueryError] = useState<string | null>(null);
+  const [activeNavPage, setActiveNavPage] = useState<NavPage>('home');
 
   // Modals
   const [selectedDocForModal, setSelectedDocForModal] = useState<LegalDocument | null>(null);
@@ -252,6 +257,8 @@ export const LegalResearchProvider: React.FC<{ children: ReactNode }> = ({ child
         selectedCitationForModal,
         isBackendStatusModalOpen,
         queryError,
+        activeNavPage,
+        setActiveNavPage,
         toggleMode,
         refreshHealth,
         refreshDocuments,

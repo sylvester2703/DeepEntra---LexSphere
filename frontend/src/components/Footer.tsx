@@ -1,14 +1,27 @@
 import React from 'react';
 import { Scale, Mail, Phone, MapPin } from 'lucide-react';
+import { useLegalResearch, NavPage } from '../context/LegalResearchContext';
 
 export const Footer: React.FC = () => {
+  const { setActiveNavPage } = useLegalResearch();
+
+  const handleNav = (page: NavPage) => {
+    setActiveNavPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer className="footer-container" role="contentinfo">
       <div className="footer-inner">
         <div className="footer-top-grid">
           {/* Brand & Contact Column */}
           <div className="footer-brand-col">
-            <div className="footer-brand-title">
+            <div 
+              className="footer-brand-title" 
+              onClick={() => handleNav('home')} 
+              style={{ cursor: 'pointer' }}
+              title="Return to LexSphere Home"
+            >
               <Scale size={20} style={{ color: 'var(--brand-gold)' }} />
               LEXSPHERE<span className="brand-trademark">™</span>
             </div>
@@ -46,11 +59,31 @@ export const Footer: React.FC = () => {
           <div className="footer-col">
             <h4 className="footer-col-title">Product</h4>
             <ul className="footer-nav-list">
-              <li><span className="footer-nav-link">Legal Research</span></li>
-              <li><span className="footer-nav-link">Citation Verification</span></li>
-              <li><span className="footer-nav-link">Document Intelligence</span></li>
-              <li><span className="footer-nav-link">Statutory Discovery</span></li>
-              <li><span className="footer-nav-link">Propositional Entailment</span></li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('workspace')}>
+                  Legal Research Workspace
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('workspace')}>
+                  Citation Verification
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('corpus')}>
+                  5 Curated Legal Documents
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('corpus')}>
+                  Statutory Discovery
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('workspace')}>
+                  Propositional Entailment
+                </span>
+              </li>
             </ul>
           </div>
 
@@ -58,11 +91,31 @@ export const Footer: React.FC = () => {
           <div className="footer-col">
             <h4 className="footer-col-title">Company</h4>
             <ul className="footer-nav-list">
-              <li><span className="footer-nav-link">About LexSphere™</span></li>
-              <li><span className="footer-nav-link">Verified Legal Corpus</span></li>
-              <li><span className="footer-nav-link">Contact & Support</span></li>
-              <li><span className="footer-nav-link">Security & Privacy</span></li>
-              <li><span className="footer-nav-link">Partner Law Firms</span></li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('about')}>
+                  About LexSphere™
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('corpus')}>
+                  Verified Legal Corpus
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('contact')}>
+                  Contact & Support
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('about')}>
+                  Security & Privacy
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('contact')}>
+                  Law Firm Deployments
+                </span>
+              </li>
             </ul>
           </div>
 
@@ -70,11 +123,31 @@ export const Footer: React.FC = () => {
           <div className="footer-col">
             <h4 className="footer-col-title">Legal & Governance</h4>
             <ul className="footer-nav-list">
-              <li><span className="footer-nav-link">Privacy Policy</span></li>
-              <li><span className="footer-nav-link">Terms of Service</span></li>
-              <li><span className="footer-nav-link">Compliance Standards</span></li>
-              <li><span className="footer-nav-link">Attorney-Client Disclaimer</span></li>
-              <li><span className="footer-nav-link">Trademark Notice</span></li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('about')}>
+                  Privacy Policy
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('about')}>
+                  Terms of Service
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('about')}>
+                  Compliance Standards
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('about')}>
+                  Attorney-Client Disclaimer
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('about')}>
+                  Trademark Notice
+                </span>
+              </li>
             </ul>
           </div>
         </div>

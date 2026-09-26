@@ -1,6 +1,6 @@
 import React from 'react';
-import { Scale, CheckCircle2 } from 'lucide-react';
-import { useLegalResearch } from '../context/LegalResearchContext';
+import { Scale, CheckCircle2, Home, Search, BookOpen, Info, Mail, LucideIcon } from 'lucide-react';
+import { useLegalResearch, NavPage } from '../context/LegalResearchContext';
 
 export const Header: React.FC = () => {
   const { 
@@ -8,17 +8,32 @@ export const Header: React.FC = () => {
     toggleMode, 
     backendHealth, 
     setIsBackendStatusModalOpen,
-    documents 
+    documents,
+    activeNavPage,
+    setActiveNavPage 
   } = useLegalResearch();
 
   const isLive = activeMode === 'live';
   const isHealthy = backendHealth?.status === 'healthy';
 
+  const navItems: { id: NavPage; label: string; icon: LucideIcon }[] = [
+    { id: 'home', label: 'Home', icon: Home },
+    { id: 'workspace', label: 'Workspace', icon: Search },
+    { id: 'corpus', label: 'Legal Corpus', icon: BookOpen },
+    { id: 'about', label: 'About', icon: Info },
+    { id: 'contact', label: 'Contact', icon: Mail },
+  ];
+
   return (
     <header className="header-container" role="banner">
       <div className="header-inner">
         {/* Brand & Trademark */}
-        <div className="brand-section">
+        <div 
+          className="brand-section" 
+          onClick={() => setActiveNavPage('home')}
+          style={{ cursor: 'pointer' }}
+          title="Return to LexSphere Home"
+        >
           <div className="brand-logo-icon">
             <Scale size={18} strokeWidth={2.2} />
           </div>
@@ -33,6 +48,27 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
+        {/* Center Main Navigation */}
+        <nav className="header-nav-center" aria-label="Main Navigation">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeNavPage === item.id;
+
+            return (
+              <button
+                key={item.id}
+                type="button"
+                className={`header-nav-tab ${isActive ? 'active' : ''}`}
+                onClick={() => setActiveNavPage(item.id)}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                <Icon size={14} />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+
         {/* Minimal Controls */}
         <div className="header-controls">
           {/* Mode Selector */}
@@ -42,7 +78,7 @@ export const Header: React.FC = () => {
               className={`mode-btn ${!isLive ? 'active-mode' : ''}`}
               onClick={() => toggleMode('demo')}
             >
-              Demo Mode
+              Demo
             </button>
             <button
               type="button"
@@ -63,9 +99,9 @@ export const Header: React.FC = () => {
             <CheckCircle2 size={12} style={{ color: '#34d399' }} />
             <span>
               {!isLive 
-                ? `${documents.length || 5} Documents Available` 
+                ? `${documents.length || 5} Documents` 
                 : isHealthy 
-                  ? `Live Backend (${documents.length} Docs)` 
+                  ? `Live Backend` 
                   : 'Backend Offline'
               }
             </span>
