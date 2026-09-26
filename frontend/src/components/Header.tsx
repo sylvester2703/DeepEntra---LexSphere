@@ -16,12 +16,12 @@ export const Header: React.FC = () => {
   const isHealthy = backendHealth?.status === 'healthy';
 
   return (
-    <header className="header-container">
+    <header className="header-container" role="banner">
       <div className="header-inner">
-        {/* Brand Identity */}
+        {/* Brand & Subtitle */}
         <div className="brand-section">
           <div className="brand-logo-icon">
-            <Scale size={22} strokeWidth={2.2} />
+            <Scale size={18} strokeWidth={2.2} />
           </div>
           <div className="brand-titles">
             <div className="brand-title">
@@ -34,26 +34,25 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Global Controls & Status */}
+        {/* Essential Navigation Controls Only */}
         <div className="header-controls">
-          {/* Architecture Transparency Button */}
+          {/* Architecture & Pipeline Action */}
           <button 
             type="button"
             className="architecture-btn"
             onClick={() => setIsArchitectureModalOpen(true)}
-            title="Inspect how LexSphere answers are prepared"
+            title="Inspect retrieval pipeline architecture"
           >
-            <Layers size={14} />
+            <Layers size={13} />
             <span>Architecture & Pipeline</span>
           </button>
 
-          {/* Mode Switcher: Demo vs Live FastAPI */}
+          {/* Mode Selector */}
           <div className="mode-toggle-group" role="group" aria-label="Operating Mode">
             <button
               type="button"
               className={`mode-btn ${!isLive ? 'active-mode' : ''}`}
               onClick={() => toggleMode('demo')}
-              title="Self-contained demo mode with curated legal corpus"
             >
               Demo Mode
             </button>
@@ -61,18 +60,17 @@ export const Header: React.FC = () => {
               type="button"
               className={`mode-btn ${isLive ? 'active-live' : ''}`}
               onClick={() => toggleMode('live')}
-              title="Connect to local FastAPI backend (Person 1 RAG + Person 2 Verification)"
             >
-              Live FastAPI
+              Live API
             </button>
           </div>
 
-          {/* Backend Status Pill */}
+          {/* Corpus Status */}
           <button
             type="button"
             className="status-pill-btn"
             onClick={() => setIsBackendStatusModalOpen(true)}
-            title="Inspect backend and local Ollama model connection"
+            title="Inspect backend and corpus status"
           >
             <span 
               className={`status-dot ${
@@ -85,17 +83,17 @@ export const Header: React.FC = () => {
             />
             <span>
               {!isLive 
-                ? 'Demo Corpus (5 Docs)' 
+                ? `${documents.length} Corpus Docs` 
                 : isHealthy 
-                  ? `FastAPI Online (${documents.length} Docs)` 
-                  : 'FastAPI Offline'
+                  ? `Live (${documents.length} Docs)` 
+                  : 'API Offline'
               }
             </span>
           </button>
 
-          {/* Ollama / RAG Pill */}
+          {/* Model Status */}
           <div className="status-pill-btn" style={{ cursor: 'default' }}>
-            <Cpu size={14} style={{ color: 'var(--brand-gold)' }} />
+            <Cpu size={13} style={{ color: 'var(--brand-gold)' }} />
             <span>Llama 3 (Ollama)</span>
           </div>
         </div>

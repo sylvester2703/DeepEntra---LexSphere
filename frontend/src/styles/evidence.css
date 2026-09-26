@@ -1,286 +1,205 @@
-/* Evidence, Supporting Sources & Citation Verification Styles */
-.evidence-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
+/* Sources & Citation Verification Tab Styles */
 
-.evidence-header-tabs {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 2px solid var(--border-subtle);
-  padding-bottom: 0.25rem;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.tabs-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.tab-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.6rem 1.1rem;
-  font-family: var(--font-serif);
-  font-size: 0.975rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  border-bottom: 2px solid transparent;
-  margin-bottom: -0.25rem;
-  transition: all var(--transition-fast);
-  border-radius: var(--radius-xs) var(--radius-xs) 0 0;
-}
-
-.tab-btn:hover {
-  color: var(--text-primary);
-  background: var(--bg-surface-sand);
-}
-
-.tab-btn.active {
-  color: var(--brand-leather);
-  border-bottom-color: var(--brand-leather);
-  background: var(--bg-surface);
-}
-
-.tab-count {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  padding: 0.1rem 0.4rem;
-  border-radius: var(--radius-full);
-  background: var(--bg-surface-sand);
-  border: 1px solid var(--border-medium);
-}
-
-/* Citation Verification Cards Grid */
-.citations-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.citation-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-md);
-  padding: 1.25rem 1.5rem;
-  box-shadow: var(--shadow-sm);
+/* Tab 2: Retrieved Legal Sources */
+.sources-tab-list {
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  transition: all var(--transition-fast);
-  border-left: 4px solid var(--border-medium);
 }
 
-.citation-card:hover {
-  box-shadow: var(--shadow-md);
-}
-
-.citation-card.verified {
-  border-left-color: var(--status-verified-pill);
-}
-
-.citation-card.partially_verified {
-  border-left-color: var(--status-partial-pill);
-}
-
-.citation-card.unverified {
-  border-left-color: var(--status-unverified-pill);
-}
-
-.citation-card.source_not_found {
-  border-left-color: var(--status-notfound-pill);
-}
-
-.citation-card.highlighted-citation {
-  border-color: var(--brand-leather);
-  background: #fdfaf6;
-  box-shadow: 0 0 0 2px rgba(87, 51, 30, 0.25), var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.citation-card-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.claim-container {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.65rem;
-  flex: 1;
-}
-
-.marker-pill {
-  font-family: var(--font-mono);
-  font-size: 0.825rem;
-  font-weight: 700;
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-xs);
-  background: var(--bg-dark-espresso);
-  color: #fff8f0;
-  flex-shrink: 0;
-}
-
-.claim-text {
-  font-family: var(--font-serif);
-  font-size: 0.975rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  line-height: 1.4;
-}
-
-/* Status & Confidence Badge */
-.verification-badge-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
-}
-
-.confidence-score {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-/* Excerpt Box */
-.excerpt-box {
-  background: var(--bg-surface-subtle);
+.source-item-card {
+  background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-left: 3px solid var(--border-strong);
-  border-radius: var(--radius-xs);
-  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.15rem;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.5rem;
+  transition: all var(--transition-fast);
 }
 
-.excerpt-header {
+.source-item-card:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-xs);
+}
+
+.source-card-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  font-size: 0.775rem;
-  font-weight: 600;
-  color: var(--brand-leather);
+  gap: 0.75rem;
 }
 
-.excerpt-source-title {
+.source-card-title {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.source-card-sub {
+  font-size: 0.725rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.source-scores-pill-group {
   display: flex;
   align-items: center;
   gap: 0.35rem;
 }
 
-.excerpt-content {
+.source-score-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--radius-xs);
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+}
+
+.source-score-tag.highlight {
+  background: var(--brand-brass-light);
+  border-color: rgba(194, 149, 67, 0.4);
+  color: var(--brand-leather);
+  font-weight: 600;
+}
+
+.source-excerpt-text {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  background: var(--bg-surface-subtle);
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-xs);
+  border-left: 2px solid var(--border-strong);
+}
+
+/* Tab 3: Citation Verification Audit List */
+.citations-audit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.citation-audit-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  border-left: 3.5px solid var(--border-medium);
+  transition: all var(--transition-fast);
+}
+
+.citation-audit-card.verified {
+  border-left-color: var(--status-verified-dot);
+}
+
+.citation-audit-card.partially_verified {
+  border-left-color: var(--status-partial-dot);
+}
+
+.citation-audit-card.unverified {
+  border-left-color: var(--status-unverified-dot);
+}
+
+.citation-audit-card.source_not_found {
+  border-left-color: var(--status-notfound-dot);
+}
+
+.citation-audit-card.target-highlighted {
+  background: #fefcf9;
+  border-color: var(--brand-leather);
+  box-shadow: 0 0 0 2px rgba(87, 51, 30, 0.15);
+}
+
+.audit-card-top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.audit-claim-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  flex: 1;
+}
+
+.audit-marker-pill {
+  font-family: var(--font-mono);
+  font-size: 0.775rem;
+  font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-xs);
+  background: var(--bg-header);
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.audit-claim-heading {
   font-family: var(--font-serif);
   font-size: 0.925rem;
-  line-height: 1.55;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+.audit-status-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.audit-confidence-text {
+  font-family: var(--font-mono);
+  font-size: 0.725rem;
+  color: var(--text-muted);
+}
+
+/* Source Excerpt & Rationale Boxes in Audit Card */
+.audit-source-block {
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.audit-source-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.725rem;
+  font-weight: 600;
+  color: var(--brand-leather);
+}
+
+.audit-source-excerpt {
+  font-family: var(--font-serif);
+  font-size: 0.875rem;
+  line-height: 1.5;
   color: var(--text-secondary);
   font-style: italic;
 }
 
-/* Rationale Box */
-.rationale-box {
+.audit-rationale-box {
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
-  font-size: 0.8rem;
+  gap: 0.4rem;
+  font-size: 0.775rem;
   color: var(--text-secondary);
-  background: var(--bg-surface-sand);
-  border-radius: var(--radius-xs);
-  padding: 0.6rem 0.85rem;
+  background: #ffffff;
   border: 1px solid var(--border-subtle);
-}
-
-.rationale-icon {
-  flex-shrink: 0;
-  margin-top: 0.1rem;
-}
-
-.citation-card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid var(--border-subtle);
-  padding-top: 0.65rem;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-/* Retrieved Passages List */
-.passages-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.passage-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-md);
-  padding: 1.25rem 1.5rem;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.passage-card-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.passage-title {
-  font-family: var(--font-serif);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.passage-scores-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.score-badge {
-  font-family: var(--font-mono);
-  font-size: 0.725rem;
-  padding: 0.15rem 0.45rem;
   border-radius: var(--radius-xs);
-  background: var(--bg-surface-sand);
-  border: 1px solid var(--border-medium);
-  color: var(--text-secondary);
-}
-
-.score-badge.combined {
-  background: var(--brand-amber-light);
-  border-color: var(--brand-amber);
-  color: var(--brand-leather);
-  font-weight: 600;
-}
-
-.keywords-tags-group {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-
-.keyword-tag {
-  font-size: 0.7rem;
-  background: var(--bg-surface-sand);
-  border: 1px solid var(--border-subtle);
-  padding: 0.1rem 0.4rem;
-  border-radius: var(--radius-xs);
-  color: var(--text-secondary);
+  padding: 0.5rem 0.75rem;
 }

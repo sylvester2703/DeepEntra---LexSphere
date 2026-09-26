@@ -1,153 +1,84 @@
-/* Pipeline Transparency & Architecture Inspection Styles */
-.pipeline-panel {
+/* Collapsible Retrieval Pipeline Summary Accordion */
+.pipeline-accordion-card {
   background: var(--bg-surface);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-md);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
 }
 
-.pipeline-header {
+.pipeline-accordion-trigger {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 0.85rem;
+  padding: 0.65rem 1rem;
+  background: var(--bg-surface-subtle);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
 }
 
-.pipeline-title {
-  font-family: var(--font-serif);
-  font-size: 1.15rem;
-  font-weight: 600;
+.pipeline-accordion-trigger:hover {
+  background: var(--bg-surface-hover);
   color: var(--text-primary);
+}
+
+.pipeline-trigger-left {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.pipeline-diagram {
+.pipeline-metrics-badge {
+  font-family: var(--font-mono);
+  font-size: 0.725rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.pipeline-accordion-content {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  position: relative;
+  background: #ffffff;
+  animation: fadeIn var(--transition-fast) forwards;
 }
 
-.pipeline-step {
+.pipeline-steps-grid {
   display: grid;
-  grid-template-columns: 36px 1fr;
-  gap: 1rem;
-  align-items: start;
-  position: relative;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.65rem;
 }
 
-.pipeline-step:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  left: 17px;
-  top: 36px;
-  bottom: -14px;
-  width: 2px;
-  background: var(--border-medium);
-}
-
-.step-number-circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--bg-surface-sand);
-  border: 1.5px solid var(--border-strong);
-  color: var(--brand-leather);
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-}
-
-.step-number-circle.active {
-  background: var(--bg-dark-espresso);
-  border-color: var(--brand-brass);
-  color: var(--brand-gold);
-}
-
-.step-card {
+.pipeline-step-box {
   background: var(--bg-surface-subtle);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 0.85rem 1rem;
+  border-radius: var(--radius-xs);
+  padding: 0.65rem 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.25rem;
 }
 
-.step-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.85rem;
+.step-box-num {
+  font-family: var(--font-mono);
+  font-size: 0.675rem;
+  font-weight: 700;
+  color: var(--brand-leather);
+}
+
+.step-box-title {
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-.step-badge {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  padding: 0.1rem 0.4rem;
-  border-radius: var(--radius-xs);
-  background: var(--bg-surface-sand);
-  border: 1px solid var(--border-medium);
-  color: var(--brand-leather);
-}
-
-.step-desc {
-  font-size: 0.775rem;
-  color: var(--text-secondary);
-  line-height: 1.4;
-}
-
-.step-meta-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
+.step-box-desc {
+  font-size: 0.725rem;
   color: var(--text-muted);
-  margin-top: 0.2rem;
-}
-
-/* Latency & Hardware Metrics Banner */
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 0.75rem;
-  background: var(--bg-surface-sand);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 0.85rem;
-}
-
-.metric-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.metric-label {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-weight: 500;
-}
-
-.metric-value {
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--brand-leather);
+  line-height: 1.35;
 }
