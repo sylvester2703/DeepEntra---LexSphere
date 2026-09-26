@@ -5,9 +5,20 @@ import { useLegalResearch, NavPage } from '../context/LegalResearchContext';
 export const Footer: React.FC = () => {
   const { setActiveNavPage } = useLegalResearch();
 
-  const handleNav = (page: NavPage) => {
+  const handleNav = (page: NavPage, targetId?: string) => {
     setActiveNavPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (targetId) {
+      setTimeout(() => {
+        const el = document.getElementById(targetId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 80);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -124,27 +135,27 @@ export const Footer: React.FC = () => {
             <h4 className="footer-col-title">Legal & Governance</h4>
             <ul className="footer-nav-list">
               <li>
-                <span className="footer-nav-link" onClick={() => handleNav('about')}>
+                <span className="footer-nav-link" onClick={() => handleNav('about', 'privacy-policy')}>
                   Privacy Policy
                 </span>
               </li>
               <li>
-                <span className="footer-nav-link" onClick={() => handleNav('about')}>
+                <span className="footer-nav-link" onClick={() => handleNav('about', 'terms-of-service')}>
                   Terms of Service
                 </span>
               </li>
               <li>
-                <span className="footer-nav-link" onClick={() => handleNav('about')}>
+                <span className="footer-nav-link" onClick={() => handleNav('about', 'compliance-standards')}>
                   Compliance Standards
                 </span>
               </li>
               <li>
-                <span className="footer-nav-link" onClick={() => handleNav('about')}>
+                <span className="footer-nav-link" onClick={() => handleNav('about', 'attorney-client-disclaimer')}>
                   Attorney-Client Disclaimer
                 </span>
               </li>
               <li>
-                <span className="footer-nav-link" onClick={() => handleNav('about')}>
+                <span className="footer-nav-link" onClick={() => handleNav('about', 'trademark-notice')}>
                   Trademark Notice
                 </span>
               </li>
