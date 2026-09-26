@@ -2,31 +2,17 @@ import React, { useState } from 'react';
 import { 
   Search, 
   Loader2, 
-  ArrowRight, 
-  BookMarked
+  ArrowRight
 } from 'lucide-react';
 import { useLegalResearch } from '../context/LegalResearchContext';
-import { SAMPLE_RESEARCH_QUESTIONS } from '../services/demoData';
 
 export const ResearchQueryInput: React.FC = () => {
   const { 
     isQuerying, 
-    runQuery, 
-    selectSampleQuestion, 
-    activeQuestionId
+    runQuery
   } = useLegalResearch();
 
-  const [queryText, setQueryText] = useState<string>(
-    SAMPLE_RESEARCH_QUESTIONS[0]?.query || ''
-  );
-  const [selectedBenchmarkCat, setSelectedBenchmarkCat] = useState<string>('All');
-
-  const benchmarkCategories = ['All', 'Contract Law', 'Constitutional Law', 'Privacy Law'];
-
-  const filteredBenchmarks = SAMPLE_RESEARCH_QUESTIONS.filter(b => {
-    if (selectedBenchmarkCat === 'All') return true;
-    return b.category === selectedBenchmarkCat;
-  });
+  const [queryText, setQueryText] = useState<string>('');
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -41,56 +27,8 @@ export const ResearchQueryInput: React.FC = () => {
     }
   };
 
-  const handleBenchmarkSelect = (sampleId: string) => {
-    const sample = SAMPLE_RESEARCH_QUESTIONS.find(s => s.id === sampleId);
-    if (sample) {
-      setQueryText(sample.query);
-      selectSampleQuestion(sample);
-    }
-  };
-
   return (
     <div className="research-workspace" aria-label="Legal Research Query Workspace">
-      {/* Benchmark Selector Bar */}
-      <div className="benchmark-compact-bar">
-        <div className="benchmark-left">
-          <span className="benchmark-label">
-            <BookMarked size={13} style={{ color: 'var(--brand-leather)' }} />
-            Sample Inquiries:
-          </span>
-
-          <div className="benchmark-category-pills">
-            {benchmarkCategories.map(cat => (
-              <button
-                key={cat}
-                type="button"
-                className={`benchmark-cat-btn ${selectedBenchmarkCat === cat ? 'active' : ''}`}
-                onClick={() => setSelectedBenchmarkCat(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Dropdown to Load Benchmark Query */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-          <select
-            className="benchmark-dropdown-select"
-            value={activeQuestionId || ''}
-            onChange={(e) => handleBenchmarkSelect(e.target.value)}
-            disabled={isQuerying}
-            aria-label="Select benchmark inquiry"
-          >
-            {filteredBenchmarks.map(sample => (
-              <option key={sample.id} value={sample.id}>
-                {sample.title}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
       {/* Central Query Input Card */}
       <div className="query-card-container">
         <div className="query-card-top-row">
