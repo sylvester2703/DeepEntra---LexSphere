@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scale, Sparkles, ShieldCheck } from 'lucide-react';
+import { Scale, BookOpen, ShieldCheck } from 'lucide-react';
 
 export const LegalLoadingState: React.FC = () => {
   return (
@@ -31,12 +31,12 @@ export const LegalLoadingState: React.FC = () => {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', marginTop: '0.25rem' }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-            <Sparkles size={13} style={{ color: 'var(--brand-leather)' }} />
-            Grounded Synthesis
+            <BookOpen size={13} style={{ color: 'var(--brand-leather)' }} />
+            Grounded Statutory Synthesis
           </span>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: 'var(--status-verified-text)' }}>
             <ShieldCheck size={13} />
-            Independent Verification
+            Propositional Verification
           </span>
         </div>
       </div>

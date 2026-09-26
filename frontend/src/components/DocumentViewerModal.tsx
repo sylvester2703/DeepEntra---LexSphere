@@ -80,9 +80,9 @@ export const DocumentViewerModal: React.FC = () => {
                 <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--brand-leather)' }}>
                   Cited Passage Context (Page {citation.sourcePage}):
                 </span>
-                <span className={`legal-pill legal-pill-${citation.verificationStatus === 'verified' ? 'verified' : 'partial'}`}>
+                <span className={`legal-pill legal-pill-${citation.verificationStatus === 'verified' ? 'verified' : 'unverified'}`}>
                   {citation.verificationStatus === 'verified' ? <CheckCircle2 size={11} /> : <AlertTriangle size={11} />}
-                  {citation.verificationStatus.replace('_', ' ').toUpperCase()}
+                  {citation.verificationStatus === 'verified' ? 'Verified' : citation.verificationStatus === 'source_not_found' ? 'Source Not Found' : 'Not Verified'}
                 </span>
               </div>
               <div className="doc-viewer-excerpt-highlight">

@@ -67,7 +67,7 @@ export const HomePage: React.FC = () => {
               <span className="metric-sub">Direct Source Proof</span>
             </div>
             <div className="metric-box">
-              <span className="metric-number">Accuracy</span>
+              <span className="metric-number">Precision</span>
               <span className="metric-title">Zero Hallucinations</span>
               <span className="metric-sub">Strict Source Citation</span>
             </div>

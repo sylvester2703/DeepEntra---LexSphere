@@ -62,16 +62,16 @@ export const GroundedAnswerWorkspace: React.FC = () => {
           </span>
         );
       case 'partially_verified':
-        return (
-          <span className="legal-pill legal-pill-partial">
-            <AlertTriangle size={11} /> Partially Verified
-          </span>
-        );
       case 'unverified':
-      case 'source_not_found':
         return (
           <span className="legal-pill legal-pill-unverified">
             <AlertTriangle size={11} /> Not Verified
+          </span>
+        );
+      case 'source_not_found':
+        return (
+          <span className="legal-pill legal-pill-unverified">
+            <AlertTriangle size={11} /> Source Not Found
           </span>
         );
     }
@@ -228,14 +228,9 @@ export const GroundedAnswerWorkspace: React.FC = () => {
               <span className="summary-stat-tag" style={{ color: 'var(--status-verified-text)' }}>
                 <CheckCircle2 size={12} /> {verifiedCount} Verified Authorities
               </span>
-              {partialCount > 0 && (
-                <span className="summary-stat-tag" style={{ color: 'var(--status-partial-text)' }}>
-                  <AlertTriangle size={12} /> {partialCount} Partially Supported
-                </span>
-              )}
-              {unverifiedCount > 0 && (
+              {(partialCount + unverifiedCount) > 0 && (
                 <span className="summary-stat-tag" style={{ color: 'var(--status-unverified-text)' }}>
-                  <AlertTriangle size={12} /> {unverifiedCount} Unverified
+                  <AlertTriangle size={12} /> {partialCount + unverifiedCount} Not Verified
                 </span>
               )}
             </div>

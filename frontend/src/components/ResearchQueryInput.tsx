@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Search, 
-  Sparkles, 
+  Loader2, 
   ArrowRight, 
   BookMarked, 
   Filter
@@ -138,7 +138,7 @@ export const ResearchQueryInput: React.FC = () => {
             >
               {isQuerying ? (
                 <>
-                  <Sparkles size={14} className="animate-spin" />
+                  <Loader2 size={14} className="animate-spin" />
                   Analyzing Legal Corpus...
                 </>
               ) : (
