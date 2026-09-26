@@ -1,0 +1,195 @@
+/* Enterprise Legal Answer Workspace & Tabs */
+.response-workspace-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header & Tabs Row */
+.response-tabs-header {
+  background: var(--bg-surface-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.response-tabs-group {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.response-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.response-tab-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-surface-hover);
+}
+
+.response-tab-btn.active {
+  color: var(--brand-leather);
+  border-bottom-color: var(--brand-leather);
+  background: var(--bg-surface);
+}
+
+.tab-badge-pill {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+}
+
+.response-tab-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.btn-tool-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xs);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.btn-tool-action:hover {
+  background: var(--bg-surface-subtle);
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+
+/* Tab 1: Editorial AI Generated Answer */
+.tab-content-container {
+  padding: 1.5rem 1.75rem;
+  animation: fadeIn var(--transition-fast) forwards;
+}
+
+.editorial-answer-body {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--text-primary);
+  max-width: 900px;
+}
+
+.editorial-answer-body p {
+  margin-bottom: 1.15rem;
+  color: #24201c;
+}
+
+.editorial-answer-body p:last-child {
+  margin-bottom: 0;
+}
+
+.editorial-answer-body strong {
+  font-weight: 600;
+  color: #120f0c;
+}
+
+.editorial-answer-body ol, .editorial-answer-body ul {
+  margin-left: 1.4rem;
+  margin-bottom: 1.15rem;
+}
+
+.editorial-answer-body li {
+  margin-bottom: 0.45rem;
+}
+
+/* Interactive Inline Citation Chips */
+.citation-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.05rem 0.35rem;
+  margin: 0 0.2rem;
+  border-radius: 3px;
+  cursor: pointer;
+  vertical-align: 0.12em;
+  transition: all var(--transition-fast);
+  background: var(--status-verified-bg);
+  border: 1px solid var(--status-verified-border);
+  color: var(--status-verified-text);
+}
+
+.citation-chip-btn:hover {
+  background: #d6eedc;
+  border-color: #1a8342;
+  transform: translateY(-1px);
+}
+
+.citation-chip-btn.partially_verified {
+  background: var(--status-partial-bg);
+  border-color: var(--status-partial-border);
+  color: var(--status-partial-text);
+}
+
+.citation-chip-btn.partially_verified:hover {
+  background: #fae7c4;
+}
+
+.citation-chip-btn.unverified {
+  background: var(--status-unverified-bg);
+  border-color: var(--status-unverified-border);
+  color: var(--status-unverified-text);
+}
+
+/* Quick Summary Bar below Answer */
+.answer-summary-footer {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.citation-summary-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.summary-stat-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 500;
+}
