@@ -1,0 +1,91 @@
+:root {
+  /* Surface & Background Palette (Warm White, Sand, Light Brown) */
+  --bg-canvas: #faf7f2;
+  --bg-surface: #ffffff;
+  --bg-surface-sand: #f5efe6;
+  --bg-surface-sand-hover: #ebe4d8;
+  --bg-surface-subtle: #f8f4ec;
+  --bg-surface-active: #eee6d8;
+  --bg-inset: #efe8dc;
+  
+  /* Deep Brown & Espresso (Headers, Primary Actions, Structural Elements) */
+  --bg-dark-espresso: #1f1610;
+  --bg-dark-brown: #2d2018;
+  --bg-dark-walnut: #3a2b21;
+  --bg-dark-card: #281d15;
+
+  /* Borders & Dividers */
+  --border-subtle: #ebdcd0;
+  --border-light: #e4d7c6;
+  --border-medium: #cfbfa8;
+  --border-strong: #9e8770;
+  --border-focus: #5c351f;
+
+  /* Typography Colors */
+  --text-primary: #1c150e;
+  --text-secondary: #4a3e33;
+  --text-muted: #7d6e60;
+  --text-subtle: #9c8c7d;
+  --text-on-dark: #fcf8f2;
+  --text-on-dark-muted: #c9bcaf;
+
+  /* Brand Accents (Legal Leather, Brass, Wax Seal Amber) */
+  --brand-leather: #57331e;
+  --brand-leather-hover: #442615;
+  --brand-leather-light: #7b4c2e;
+  --brand-amber: #b8731d;
+  --brand-amber-light: #fef5e7;
+  --brand-brass: #a67c33;
+  --brand-parchment: #e8dcc8;
+
+  /* Citation Verification Semantic States */
+  /* 1. Verified */
+  --status-verified-bg: #eff7f2;
+  --status-verified-border: #bce3c8;
+  --status-verified-text: #14592b;
+  --status-verified-pill: #1f7d40;
+
+  /* 2. Partially Verified */
+  --status-partial-bg: #fdf7ec;
+  --status-partial-border: #f5dda8;
+  --status-partial-text: #824f0c;
+  --status-partial-pill: #a86c12;
+
+  /* 3. Unverified / Contradiction */
+  --status-unverified-bg: #fdf3f2;
+  --status-unverified-border: #f8c9c7;
+  --status-unverified-text: #8c1e1a;
+  --status-unverified-pill: #b32622;
+
+  /* 4. Source Not Found */
+  --status-notfound-bg: #f3f3f5;
+  --status-notfound-border: #d2d5db;
+  --status-notfound-text: #4b5261;
+  --status-notfound-pill: #677184;
+
+  /* Typography Stacks */
+  --font-serif: 'Newsreader', 'Georgia', 'Cambria', 'Times New Roman', serif;
+  --font-display: 'Cinzel', 'Newsreader', 'Georgia', serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+
+  /* Shadows (Subtle, Crisp, Non-Gimmicky) */
+  --shadow-sm: 0 1px 2px rgba(45, 32, 24, 0.05);
+  --shadow-md: 0 4px 12px rgba(45, 32, 24, 0.07), 0 1px 3px rgba(45, 32, 24, 0.04);
+  --shadow-lg: 0 10px 25px -4px rgba(45, 32, 24, 0.1), 0 4px 8px -2px rgba(45, 32, 24, 0.05);
+  --shadow-drawer: -8px 0 30px rgba(31, 22, 16, 0.18);
+  --shadow-modal: 0 20px 45px rgba(28, 20, 14, 0.25);
+
+  /* Border Radii */
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 140ms ease;
+  --transition-normal: 220ms ease;
+  --transition-slow: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
