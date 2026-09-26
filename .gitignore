@@ -98,3 +98,13 @@ Thumbs.db
 *.swo
 *.sublime-workspace
 *.sublime-project
+
+# --- Hybrid RAG (backend): keep folder structure, ignore generated artefacts ---
+!backend/data/
+backend/data/*
+!backend/data/processed/
+!backend/data/indexes/
+backend/data/processed/*
+backend/data/indexes/*
+!backend/data/processed/.gitkeep
+!backend/data/indexes/.gitkeep
