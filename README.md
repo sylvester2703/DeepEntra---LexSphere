@@ -45,6 +45,7 @@ npm run dev
 Visit **`http://localhost:5173/`** to interact with the legal research workspace.
 
 ### Key Capabilities in `frontend/`:
+
 1. **Legal Corpus Management:** Upload legal PDF briefs/statutes and track multi-stage ingestion progression (OCR -> Chunking -> Indexing -> Ready).
 2. **Interactive Legal Research:** Curated benchmark inquiries (Contract Act Sec 74 damages, DPDP Act 2023 legitimate uses, Puttaswamy privacy proportionality, Kesavananda basic structure).
 3. **Grounded Editorial Synthesis:** Generated answers with interactive citation chips (`[1]`, `[2]`, `[3]`) that jump directly to highlighted supporting evidence cards.
