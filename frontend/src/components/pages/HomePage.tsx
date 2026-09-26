@@ -1,6 +1,5 @@
 import React from 'react';
 import { 
-  Scale, 
   ShieldCheck, 
   BookOpen, 
   ArrowRight, 
@@ -22,10 +21,6 @@ export const HomePage: React.FC = () => {
       {/* Hero Section */}
       <section className="home-hero-section">
         <div className="hero-content">
-          <div className="hero-badge">
-            <Scale size={14} style={{ color: 'var(--brand-gold)' }} />
-            <span>ENTERPRISE LEGAL INTELLIGENCE</span>
-          </div>
 
           <h1 className="hero-headline">
             Grounded Legal Intelligence & Independent Citation Verification

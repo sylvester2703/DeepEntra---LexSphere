@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scale, Home, Search, Info, Mail, LucideIcon, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Scale, Home, Search, Info, Mail, LucideIcon, ArrowRight } from 'lucide-react';
 import { useLegalResearch, NavPage } from '../context/LegalResearchContext';
 
 export const Header: React.FC = () => {
@@ -31,7 +31,6 @@ export const Header: React.FC = () => {
           <div className="brand-titles">
             <div className="brand-title">
               LEXSPHERE<span className="brand-trademark">™</span>
-              <span className="brand-title-badge">LEGAL INTELLIGENCE</span>
             </div>
             <span className="brand-subtitle">
               AI-Powered Legal Research & Verification Platform
@@ -62,7 +61,7 @@ export const Header: React.FC = () => {
 
         {/* Minimal Enterprise Action */}
         <div className="header-controls">
-          {activeNavPage !== 'workspace' ? (
+          {activeNavPage !== 'workspace' && (
             <button
               type="button"
               className="btn-primary"
@@ -72,11 +71,6 @@ export const Header: React.FC = () => {
               <span>Research Workspace</span>
               <ArrowRight size={13} />
             </button>
-          ) : (
-            <div className="header-status-badge">
-              <CheckCircle2 size={12} style={{ color: '#34d399' }} />
-              <span>Verified Corpus Active</span>
-            </div>
           )}
         </div>
       </div>

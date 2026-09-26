@@ -97,12 +97,6 @@ export const ResearchQueryInput: React.FC = () => {
           <h2 className="query-title-text">
             Legal Question & Research Inquiry
           </h2>
-
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-            <span className="legal-pill legal-pill-notfound">
-              Verified Legal Discovery Active
-            </span>
-          </div>
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
