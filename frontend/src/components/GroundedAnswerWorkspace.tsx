@@ -285,22 +285,11 @@ export const GroundedAnswerWorkspace: React.FC = () => {
           )}
 
           {simpleText && !simpleLoading && (
-            <>
-              <div className="editorial-answer-body simple-explanation-body">
-                {simpleText.split('\n\n').map((para, idx) => (
-                  <p key={idx} style={{ whiteSpace: 'pre-line' }}>{para}</p>
-                ))}
-              </div>
-              <div className="answer-summary-footer">
-                <span style={{ fontSize: '0.725rem', color: 'var(--text-subtle)' }}>
-                  A simplified version of the AI Legal Analysis, based only on the verified citations.
-                  It is general information, not legal advice.
-                </span>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-subtle)' }}>
-                  {simple?.method}
-                </span>
-              </div>
-            </>
+            <div className="editorial-answer-body">
+              {simpleText.split('\n\n').map((para, idx) => (
+                <p key={idx} style={{ whiteSpace: 'pre-line' }}>{para}</p>
+              ))}
+            </div>
           )}
         </div>
       )}

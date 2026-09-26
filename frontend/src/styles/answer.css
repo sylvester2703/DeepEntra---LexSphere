@@ -195,10 +195,6 @@
 }
 
 /* Simple Explanation tab (everyday-language version of the analysis) */
-.simple-explanation-body p {
-  font-family: var(--font-sans, inherit);
-}
-
 .simple-explanation-status {
   display: flex;
   align-items: center;
