@@ -3,10 +3,9 @@ import { Header } from './components/Header';
 import { DocumentManager } from './components/DocumentManager';
 import { ResearchQueryInput } from './components/ResearchQueryInput';
 import { GroundedAnswerWorkspace } from './components/GroundedAnswerWorkspace';
-import { LoadingPipelineSkeleton } from './components/LoadingPipelineSkeleton';
+import { LegalLoadingState } from './components/LegalLoadingState';
 import { Footer } from './components/Footer';
 import { DocumentViewerModal } from './components/DocumentViewerModal';
-import { PipelineArchitectureModal } from './components/PipelineArchitectureModal';
 import { BackendStatusModal } from './components/BackendStatusModal';
 import { useLegalResearch } from './context/LegalResearchContext';
 import { AlertCircle } from 'lucide-react';
@@ -22,7 +21,6 @@ import './styles/footer.css';
 export const AppContent: React.FC = () => {
   const { 
     isQuerying, 
-    pipelineStage, 
     activeResearch, 
     queryError, 
     toggleMode, 
@@ -52,7 +50,7 @@ export const AppContent: React.FC = () => {
                   <AlertCircle size={18} style={{ color: 'var(--status-unverified-dot)', marginTop: '0.1rem', flexShrink: 0 }} />
                   <div style={{ flex: 1 }}>
                     <h4 style={{ color: 'var(--status-unverified-text)', fontSize: '0.875rem', fontWeight: 600 }}>
-                      Backend Communication Error
+                      Backend Communication Notice
                     </h4>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: '0.2rem' }}>
                       {queryError}
@@ -74,9 +72,9 @@ export const AppContent: React.FC = () => {
               </div>
             )}
 
-            {/* Live Execution Progress */}
+            {/* Legal Analysis Progress */}
             {isQuerying && (
-              <LoadingPipelineSkeleton stage={pipelineStage} />
+              <LegalLoadingState />
             )}
 
             {/* Active Research Synthesis & 3-Tab Workspace */}
@@ -87,12 +85,11 @@ export const AppContent: React.FC = () => {
         </div>
       </main>
 
-      {/* Product Footer */}
+      {/* Product Footer with Trademark & Contacts */}
       <Footer />
 
       {/* Modals & Reference Lightboxes */}
       <DocumentViewerModal />
-      <PipelineArchitectureModal />
       <BackendStatusModal />
     </div>
   );

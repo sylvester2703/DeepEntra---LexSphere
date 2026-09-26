@@ -59,7 +59,7 @@ export const ResearchQueryInput: React.FC = () => {
         <div className="benchmark-left">
           <span className="benchmark-label">
             <BookMarked size={13} style={{ color: 'var(--brand-leather)' }} />
-            Research Benchmarks:
+            Sample Questions:
           </span>
 
           <div className="benchmark-category-pills">
@@ -98,7 +98,7 @@ export const ResearchQueryInput: React.FC = () => {
       <div className="query-card-container">
         <div className="query-card-top-row">
           <h2 className="query-title-text">
-            Legal Question & Statutory Query
+            Legal Question & Research Inquiry
           </h2>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             {selectedDocIds.length > 0 ? (
@@ -107,7 +107,7 @@ export const ResearchQueryInput: React.FC = () => {
               </span>
             ) : (
               <span className="legal-pill legal-pill-notfound">
-                Searching All {documents.length} Curated Legal Documents
+                Searching All {documents.length || 5} Curated Legal Documents
               </span>
             )}
           </div>

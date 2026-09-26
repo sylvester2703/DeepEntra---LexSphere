@@ -58,20 +58,20 @@ export const GroundedAnswerWorkspace: React.FC = () => {
       case 'verified':
         return (
           <span className="legal-pill legal-pill-verified">
-            <CheckCircle2 size={10} /> Verified
+            <CheckCircle2 size={11} /> Verified
           </span>
         );
       case 'partially_verified':
         return (
           <span className="legal-pill legal-pill-partial">
-            <AlertTriangle size={10} /> Partially Verified
+            <AlertTriangle size={11} /> Partially Verified
           </span>
         );
       case 'unverified':
       case 'source_not_found':
         return (
           <span className="legal-pill legal-pill-unverified">
-            <AlertTriangle size={10} /> Not Verified
+            <AlertTriangle size={11} /> Not Verified
           </span>
         );
     }
@@ -241,7 +241,7 @@ export const GroundedAnswerWorkspace: React.FC = () => {
             </div>
 
             <span style={{ fontSize: '0.725rem', color: 'var(--text-subtle)' }}>
-              Click citation badge <kbd style={{ fontFamily: 'var(--font-mono)' }}>[#]</kbd> to view supporting legal evidence
+              Click citation badge <kbd style={{ fontFamily: 'var(--font-mono)' }}>[#]</kbd> to inspect supporting legal text
             </span>
           </div>
         </div>
@@ -271,7 +271,7 @@ export const GroundedAnswerWorkspace: React.FC = () => {
                     type="button"
                     className="btn-ghost"
                     onClick={() => handleOpenPassageDoc(passage)}
-                    style={{ fontSize: '0.725rem', padding: '0.2rem 0.4rem' }}
+                    style={{ fontSize: '0.725rem', padding: '0.2rem 0.4rem', color: 'var(--brand-leather)' }}
                   >
                     <FileText size={11} /> View Source Context
                   </button>

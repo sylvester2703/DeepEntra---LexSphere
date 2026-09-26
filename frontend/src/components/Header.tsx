@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scale, Cpu, Layers, CheckCircle2 } from 'lucide-react';
+import { Scale, CheckCircle2 } from 'lucide-react';
 import { useLegalResearch } from '../context/LegalResearchContext';
 
 export const Header: React.FC = () => {
@@ -7,7 +7,6 @@ export const Header: React.FC = () => {
     activeMode, 
     toggleMode, 
     backendHealth, 
-    setIsArchitectureModalOpen, 
     setIsBackendStatusModalOpen,
     documents 
   } = useLegalResearch();
@@ -29,24 +28,13 @@ export const Header: React.FC = () => {
               <span className="brand-title-badge">LEGAL INTELLIGENCE</span>
             </div>
             <span className="brand-subtitle">
-              Hybrid RAG & Independent Citation Verification Workspace
+              AI-Powered Legal Research & Verification Platform
             </span>
           </div>
         </div>
 
         {/* Minimal Controls */}
         <div className="header-controls">
-          {/* Architecture & Pipeline Info Link */}
-          <button 
-            type="button"
-            className="architecture-btn"
-            onClick={() => setIsArchitectureModalOpen(true)}
-            title="System architecture and pipeline overview"
-          >
-            <Layers size={13} />
-            <span>Architecture & Pipeline</span>
-          </button>
-
           {/* Mode Selector */}
           <div className="mode-toggle-group" role="group" aria-label="Operating Mode">
             <button
@@ -65,7 +53,7 @@ export const Header: React.FC = () => {
             </button>
           </div>
 
-          {/* Legal Corpus Availability Status */}
+          {/* Legal Corpus Status */}
           <button
             type="button"
             className="status-pill-btn"
@@ -75,19 +63,13 @@ export const Header: React.FC = () => {
             <CheckCircle2 size={12} style={{ color: '#34d399' }} />
             <span>
               {!isLive 
-                ? `${documents.length} Legal Documents Available` 
+                ? `${documents.length || 5} Documents Available` 
                 : isHealthy 
-                  ? `Live Backend (${documents.length} Documents)` 
+                  ? `Live Backend (${documents.length} Docs)` 
                   : 'Backend Offline'
               }
             </span>
           </button>
-
-          {/* Small Llama Powered Badge */}
-          <div className="status-pill-btn" style={{ cursor: 'default' }}>
-            <Cpu size={12} style={{ color: 'var(--brand-gold)' }} />
-            <span>Powered by Llama</span>
-          </div>
         </div>
       </div>
     </header>

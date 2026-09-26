@@ -31,12 +31,12 @@ export const DocumentManager: React.FC = () => {
         <div className="docs-header-title-row">
           <h2 className="docs-header-title">
             <BookOpen size={16} style={{ color: 'var(--brand-leather)' }} />
-            LexSphere Legal Corpus
+            Legal Corpus
           </h2>
-          <span className="docs-count-pill">{documents.length}</span>
+          <span className="docs-count-pill">{documents.length || 5}</span>
         </div>
         <p className="docs-subtitle">
-          Curated legal documents verified for research
+          5 Verified statutory codes & landmark judgments
         </p>
       </div>
 

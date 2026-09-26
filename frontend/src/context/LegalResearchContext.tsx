@@ -30,7 +30,6 @@ interface LegalResearchContextType {
   highlightedCitationId: string | null;
   selectedDocForModal: LegalDocument | null;
   selectedCitationForModal: CitationItem | null;
-  isArchitectureModalOpen: boolean;
   isBackendStatusModalOpen: boolean;
   queryError: string | null;
   
@@ -47,7 +46,6 @@ interface LegalResearchContextType {
   setHighlightedCitationId: (id: string | null) => void;
   openDocModal: (doc: LegalDocument, citation?: CitationItem) => void;
   closeDocModal: () => void;
-  setIsArchitectureModalOpen: (open: boolean) => void;
   setIsBackendStatusModalOpen: (open: boolean) => void;
 }
 
@@ -69,7 +67,6 @@ export const LegalResearchProvider: React.FC<{ children: ReactNode }> = ({ child
   // Modals
   const [selectedDocForModal, setSelectedDocForModal] = useState<LegalDocument | null>(null);
   const [selectedCitationForModal, setSelectedCitationForModal] = useState<CitationItem | null>(null);
-  const [isArchitectureModalOpen, setIsArchitectureModalOpen] = useState<boolean>(false);
   const [isBackendStatusModalOpen, setIsBackendStatusModalOpen] = useState<boolean>(false);
 
   const service = apiServiceManager.getService();
@@ -253,7 +250,6 @@ export const LegalResearchProvider: React.FC<{ children: ReactNode }> = ({ child
         highlightedCitationId,
         selectedDocForModal,
         selectedCitationForModal,
-        isArchitectureModalOpen,
         isBackendStatusModalOpen,
         queryError,
         toggleMode,
@@ -268,7 +264,6 @@ export const LegalResearchProvider: React.FC<{ children: ReactNode }> = ({ child
         setHighlightedCitationId,
         openDocModal,
         closeDocModal,
-        setIsArchitectureModalOpen,
         setIsBackendStatusModalOpen
       }}
     >

@@ -1,25 +1,44 @@
 import React from 'react';
-import { Scale } from 'lucide-react';
+import { Scale, Mail, Phone, MapPin } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
     <footer className="footer-container" role="contentinfo">
       <div className="footer-inner">
         <div className="footer-top-grid">
-          {/* Brand Column */}
+          {/* Brand & Contact Column */}
           <div className="footer-brand-col">
             <div className="footer-brand-title">
-              <Scale size={18} style={{ color: 'var(--brand-gold)' }} />
+              <Scale size={20} style={{ color: 'var(--brand-gold)' }} />
               LEXSPHERE<span className="brand-trademark">™</span>
             </div>
             <p className="footer-brand-tagline">
-              AI-Powered Legal Research & Citation Verification Platform engineered for lawyers, judicial researchers, and law firms.
+              AI-Powered Legal Research & Citation Verification Platform engineered for advocates, judicial clerks, law firms, and legal researchers.
             </p>
+            
             <div className="footer-contact-info">
-              <span>Support & Partnerships:</span>
-              <a href="mailto:support@lexsphere.ai" className="footer-contact-email">
-                support@lexsphere.ai
-              </a>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Mail size={13} style={{ color: 'var(--brand-gold)' }} />
+                <span>Support: </span>
+                <a href="mailto:support@lexsphere.ai" className="footer-contact-email">
+                  support@lexsphere.ai
+                </a>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Mail size={13} style={{ color: 'var(--brand-gold)' }} />
+                <span>Legal Inquiries: </span>
+                <a href="mailto:legal@lexsphere.ai" className="footer-contact-email">
+                  legal@lexsphere.ai
+                </a>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Phone size={13} style={{ color: 'var(--brand-gold)' }} />
+                <span>Helpline: +91 (11) 4920-5000 / +1 (800) 539-7743</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <MapPin size={13} style={{ color: 'var(--brand-gold)' }} />
+                <span>One Legal Plaza, Suite 400 • Legal AI Technology Park</span>
+              </div>
             </div>
           </div>
 
@@ -31,6 +50,7 @@ export const Footer: React.FC = () => {
               <li><span className="footer-nav-link">Citation Verification</span></li>
               <li><span className="footer-nav-link">Document Intelligence</span></li>
               <li><span className="footer-nav-link">Statutory Discovery</span></li>
+              <li><span className="footer-nav-link">Propositional Entailment</span></li>
             </ul>
           </div>
 
@@ -38,21 +58,23 @@ export const Footer: React.FC = () => {
           <div className="footer-col">
             <h4 className="footer-col-title">Company</h4>
             <ul className="footer-nav-list">
-              <li><span className="footer-nav-link">About LexSphere</span></li>
-              <li><span className="footer-nav-link">Methodology & RAG</span></li>
-              <li><span className="footer-nav-link">Contact Us</span></li>
+              <li><span className="footer-nav-link">About LexSphere™</span></li>
+              <li><span className="footer-nav-link">Verified Legal Corpus</span></li>
+              <li><span className="footer-nav-link">Contact & Support</span></li>
               <li><span className="footer-nav-link">Security & Privacy</span></li>
+              <li><span className="footer-nav-link">Partner Law Firms</span></li>
             </ul>
           </div>
 
-          {/* Column 3: Legal */}
+          {/* Column 3: Legal & Governance */}
           <div className="footer-col">
-            <h4 className="footer-col-title">Legal</h4>
+            <h4 className="footer-col-title">Legal & Governance</h4>
             <ul className="footer-nav-list">
               <li><span className="footer-nav-link">Privacy Policy</span></li>
-              <li><span className="footer-nav-link">Terms of Use</span></li>
+              <li><span className="footer-nav-link">Terms of Service</span></li>
               <li><span className="footer-nav-link">Compliance Standards</span></li>
-              <li><span className="footer-nav-link">Attorney Disclaimer</span></li>
+              <li><span className="footer-nav-link">Attorney-Client Disclaimer</span></li>
+              <li><span className="footer-nav-link">Trademark Notice</span></li>
             </ul>
           </div>
         </div>
@@ -60,10 +82,10 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="footer-bottom-bar">
           <div>
-            © 2026 LexSphere™. All rights reserved. Professional Legal Intelligence.
+            © 2026 LexSphere™ Technologies Inc. All rights reserved. LexSphere™ is a registered trademark.
           </div>
           <div style={{ fontSize: '0.725rem' }}>
-            Curated Legal Corpus • Independent Entailment Verification
+            Curated 5-Document Legal Corpus • Independent Entailment Verification
           </div>
         </div>
       </div>
