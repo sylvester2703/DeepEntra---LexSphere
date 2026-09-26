@@ -193,6 +193,10 @@ class HybridRAGPipeline:
         logits: above 0 usually means relevant, strongly negative means the
         corpus probably does not cover the question.
         """
+        if top_k is None:
+            top_k = self.config.final_top_k
+        if top_k < 1:
+            raise ValueError(f"top_k must be a positive integer, got {top_k}")
         query = query.strip()
         if not query:
             return []
@@ -209,7 +213,7 @@ class HybridRAGPipeline:
             ranked = [pair for pair in ranked if pair[1] >= min_score]
 
         results: list[RetrievedChunk] = []
-        for cand, score in ranked[: top_k or self.config.final_top_k]:
+        for cand, score in ranked[:top_k]:
             chunk = self.chunks[cand.position]
             results.append(
                 RetrievedChunk(

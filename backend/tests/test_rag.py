@@ -197,6 +197,10 @@ def test_sample_legal_queries(pipeline):
 
 def test_min_score_and_empty_query(pipeline):
     assert pipeline.retrieve("   ") == []
+    assert len(pipeline.retrieve("Article 21", top_k=1)) == 1
+    for bad in (0, -1):
+        with pytest.raises(ValueError):
+            pipeline.retrieve("Article 21", top_k=bad)
     strict = pipeline.retrieve("Explain Article 21 judgement", min_score=0.0)
     assert strict and all(r["retrieval_score"] >= 0 for r in strict)
 
