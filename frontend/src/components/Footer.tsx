@@ -81,18 +81,18 @@ export const Footer: React.FC = () => {
                 </span>
               </li>
               <li>
-                <span className="footer-nav-link" onClick={() => handleNav('corpus')}>
-                  Curated Legal Documents
-                </span>
-              </li>
-              <li>
-                <span className="footer-nav-link" onClick={() => handleNav('corpus')}>
-                  Statutory Discovery
+                <span className="footer-nav-link" onClick={() => handleNav('workspace')}>
+                  Propositional Entailment
                 </span>
               </li>
               <li>
                 <span className="footer-nav-link" onClick={() => handleNav('workspace')}>
-                  Propositional Entailment
+                  AI Legal Analysis
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('workspace')}>
+                  Verbatim Proof Audit
                 </span>
               </li>
             </ul>
@@ -108,16 +108,6 @@ export const Footer: React.FC = () => {
                 </span>
               </li>
               <li>
-                <span className="footer-nav-link" onClick={() => handleNav('corpus')}>
-                  Verified Legal Corpus
-                </span>
-              </li>
-              <li>
-                <span className="footer-nav-link" onClick={() => handleNav('contact')}>
-                  Contact & Support
-                </span>
-              </li>
-              <li>
                 <span className="footer-nav-link" onClick={() => handleNav('about')}>
                   Security & Privacy
                 </span>
@@ -125,6 +115,11 @@ export const Footer: React.FC = () => {
               <li>
                 <span className="footer-nav-link" onClick={() => handleNav('contact')}>
                   Law Firm Deployments
+                </span>
+              </li>
+              <li>
+                <span className="footer-nav-link" onClick={() => handleNav('contact')}>
+                  Contact & Support
                 </span>
               </li>
             </ul>
@@ -169,7 +164,7 @@ export const Footer: React.FC = () => {
             © 2026 LexSphere™ Technologies Inc. All rights reserved. LexSphere™ is a registered trademark.
           </div>
           <div style={{ fontSize: '0.725rem' }}>
-            Curated Legal Corpus • Independent Entailment Verification
+            Enterprise Legal Intelligence • Independent Citation Verification
           </div>
         </div>
       </div>

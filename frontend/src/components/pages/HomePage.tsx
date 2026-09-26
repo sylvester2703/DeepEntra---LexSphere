@@ -6,10 +6,11 @@ import {
   ArrowRight, 
   CheckCircle2, 
   FileCheck, 
-  Lock,
-  Search,
-  FileText,
-  Copy
+  Lock, 
+  Search, 
+  FileText, 
+  Copy,
+  Info
 } from 'lucide-react';
 import { useLegalResearch } from '../../context/LegalResearchContext';
 
@@ -47,10 +48,10 @@ export const HomePage: React.FC = () => {
             <button
               type="button"
               className="btn-secondary hero-btn-sub"
-              onClick={() => setActiveNavPage('corpus')}
+              onClick={() => setActiveNavPage('about')}
             >
-              <BookOpen size={15} />
-              <span>Explore Legal Corpus</span>
+              <Info size={15} />
+              <span>About Platform</span>
             </button>
           </div>
 
@@ -58,7 +59,7 @@ export const HomePage: React.FC = () => {
           <div className="hero-metrics-grid">
             <div className="metric-box">
               <span className="metric-number">Grounding</span>
-              <span className="metric-title">Curated Legal Corpus</span>
+              <span className="metric-title">Authoritative Law</span>
               <span className="metric-sub">Supreme Court & Statutes</span>
             </div>
             <div className="metric-box">
@@ -86,7 +87,7 @@ export const HomePage: React.FC = () => {
           <div className="section-eyebrow">RESEARCH WORKFLOW & USER GUIDE</div>
           <h2 className="section-title">How to Use LexSphere™ for Legal Research</h2>
           <p className="section-desc">
-            A systematic, five-stage legal discovery workflow designed for precision, auditability, and court-ready work product.
+            A systematic legal discovery workflow designed for precision, auditability, and court-ready work product.
           </p>
         </div>
 
@@ -95,22 +96,6 @@ export const HomePage: React.FC = () => {
           <div className="process-card">
             <div className="process-card-header">
               <span className="process-step-pill">Stage 01</span>
-              <BookOpen size={18} style={{ color: 'var(--brand-leather)' }} />
-            </div>
-            <h3 className="process-card-title">Select Legal Authorities</h3>
-            <p className="process-card-desc">
-              Filter by practice area (Contract Law, Constitutional Law, Privacy Law) or select specific judicial rulings and acts in the sidebar to scope your query.
-            </p>
-            <div className="process-card-meta">
-              <CheckCircle2 size={12} style={{ color: 'var(--status-verified-text)' }} />
-              <span>Targeted Corpus Discovery</span>
-            </div>
-          </div>
-
-          {/* Step 2 */}
-          <div className="process-card">
-            <div className="process-card-header">
-              <span className="process-step-pill">Stage 02</span>
               <Search size={18} style={{ color: 'var(--brand-leather)' }} />
             </div>
             <h3 className="process-card-title">Formulate Legal Inquiries</h3>
@@ -123,10 +108,10 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Step 3 */}
+          {/* Step 2 */}
           <div className="process-card">
             <div className="process-card-header">
-              <span className="process-step-pill">Stage 03</span>
+              <span className="process-step-pill">Stage 02</span>
               <FileCheck size={18} style={{ color: 'var(--brand-leather)' }} />
             </div>
             <h3 className="process-card-title">Review Grounded Analysis</h3>
@@ -139,10 +124,10 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Step 4 */}
+          {/* Step 3 */}
           <div className="process-card">
             <div className="process-card-header">
-              <span className="process-step-pill">Stage 04</span>
+              <span className="process-step-pill">Stage 03</span>
               <ShieldCheck size={18} style={{ color: 'var(--brand-leather)' }} />
             </div>
             <h3 className="process-card-title">Audit Verbatim Judicial Proof</h3>
@@ -155,10 +140,10 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Step 5 */}
+          {/* Step 4 */}
           <div className="process-card">
             <div className="process-card-header">
-              <span className="process-step-pill">Stage 05</span>
+              <span className="process-step-pill">Stage 04</span>
               <Copy size={18} style={{ color: 'var(--brand-leather)' }} />
             </div>
             <h3 className="process-card-title">Export Verified Work Product</h3>
@@ -198,9 +183,9 @@ export const HomePage: React.FC = () => {
             <div className="feature-icon-wrapper">
               <BookOpen size={22} />
             </div>
-            <h3 className="feature-title">Authoritative Indian Corpus</h3>
+            <h3 className="feature-title">Grounded Legal Precedent</h3>
             <p className="feature-desc">
-              Pre-loaded with foundational Indian jurisprudence including the Contract Act 1872, DPDP Act 2023, and landmark Constitution Bench precedents.
+              Synthesizes arguments strictly from verified statutory frameworks and Constitution Bench jurisprudence without external hallucinations.
             </p>
           </div>
 
@@ -233,7 +218,7 @@ export const HomePage: React.FC = () => {
             Start Your Verifiable Legal Research
           </h2>
           <p className="cta-banner-desc">
-            Explore curated landmark Indian judgments and statutory codes with instant citation verification.
+            Analyze complex statutory provisions and landmark jurisprudence with instant citation verification.
           </p>
           <button
             type="button"

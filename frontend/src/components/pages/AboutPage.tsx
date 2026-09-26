@@ -70,7 +70,7 @@ export const AboutPage: React.FC = () => {
             </div>
             <h3 className="pillar-title">Grounded Hybrid Generation</h3>
             <p className="pillar-desc">
-              Leverages local LLM inference coupled with sparse lexical lookup and dense semantic retrieval to synthesize context strictly from verified legal corpus documents.
+              Leverages local LLM inference coupled with sparse lexical lookup and dense semantic retrieval to synthesize context strictly from verified legal authorities.
             </p>
           </div>
 
@@ -93,59 +93,6 @@ export const AboutPage: React.FC = () => {
             <h3 className="pillar-title">Enterprise Legal Workspace</h3>
             <p className="pillar-desc">
               A high-productivity, typography-first user interface crafted specifically for legal practitioners, providing one-click deep links directly into source paragraphs.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* The Benchmark Corpus */}
-      <section className="home-section" style={{ marginTop: '2.5rem' }}>
-        <div className="section-header-center">
-          <div className="section-eyebrow">VERIFIED AUTHORITIES</div>
-          <h2 className="section-title">Curated Legal Benchmark Corpus</h2>
-          <p className="section-desc">
-            LexSphere™ is pre-loaded with landmark Indian legal authorities representing key domains of law.
-          </p>
-        </div>
-
-        <div className="about-corpus-list">
-          <div className="about-corpus-item">
-            <div className="about-corpus-badge">Contract Law</div>
-            <h4 className="about-corpus-title">Kailash Nath Associates v. DDA (2015)</h4>
-            <p className="about-corpus-summary">
-              Definitive Supreme Court ruling establishing that Section 74 liquidated damages and earnest money forfeitures require proof of actual loss unless damage is impossible to calculate.
-            </p>
-          </div>
-
-          <div className="about-corpus-item">
-            <div className="about-corpus-badge">Contract Law</div>
-            <h4 className="about-corpus-title">The Indian Contract Act, 1872</h4>
-            <p className="about-corpus-summary">
-              Governing statutory framework for contract breach, reasonable compensation (Section 73), and penalty vs liquidated damages stipulations (Section 74).
-            </p>
-          </div>
-
-          <div className="about-corpus-item">
-            <div className="about-corpus-badge">Privacy Law</div>
-            <h4 className="about-corpus-title">Digital Personal Data Protection Act, 2023</h4>
-            <p className="about-corpus-summary">
-              India's comprehensive statutory framework regulating personal data processing, legitimate use exemptions without consent (Section 7), and Data Principal rights.
-            </p>
-          </div>
-
-          <div className="about-corpus-item">
-            <div className="about-corpus-badge">Constitutional Law</div>
-            <h4 className="about-corpus-title">Justice K.S. Puttaswamy v. Union of India (2017)</h4>
-            <p className="about-corpus-summary">
-              9-judge Constitution Bench ruling affirming privacy as a fundamental right under Article 21 and establishing the mandatory four-part proportionality test.
-            </p>
-          </div>
-
-          <div className="about-corpus-item">
-            <div className="about-corpus-badge">Constitutional Law</div>
-            <h4 className="about-corpus-title">Kesavananda Bharati v. State of Kerala (1973)</h4>
-            <p className="about-corpus-summary">
-              Landmark 13-judge bench decision laying down the Basic Structure Doctrine restricting parliamentary amending power under Article 368.
             </p>
           </div>
         </div>
@@ -234,7 +181,7 @@ export const AboutPage: React.FC = () => {
         <div className="cta-banner-content">
           <h2 className="cta-banner-title">Experience Verifiable Legal AI</h2>
           <p className="cta-banner-desc">
-            Test our citation verification engine on landmark Indian jurisprudence right in your browser.
+            Test our citation verification engine on complex legal questions right in your browser.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
             <button

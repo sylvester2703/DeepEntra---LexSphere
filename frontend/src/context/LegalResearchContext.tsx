@@ -18,7 +18,7 @@ export type PipelineStage =
   | 'verifying' 
   | 'completed';
 
-export type NavPage = 'home' | 'workspace' | 'corpus' | 'about' | 'contact';
+export type NavPage = 'home' | 'workspace' | 'about' | 'contact';
 
 interface LegalResearchContextType {
   documents: LegalDocument[];
