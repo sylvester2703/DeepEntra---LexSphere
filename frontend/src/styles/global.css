@@ -106,10 +106,16 @@ input, textarea, select {
   grid-template-columns: 310px 1fr;
   gap: 1.75rem;
   align-items: start;
+  transition: grid-template-columns 0.25s ease, gap 0.25s ease;
+}
+
+.workspace-grid.sidebar-collapsed {
+  grid-template-columns: 48px 1fr;
+  gap: 1.25rem;
 }
 
 @media (max-width: 1120px) {
-  .workspace-grid {
+  .workspace-grid, .workspace-grid.sidebar-collapsed {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }

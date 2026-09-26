@@ -34,7 +34,8 @@ export const AppContent: React.FC = () => {
     queryError, 
     toggleMode, 
     activeMode,
-    activeNavPage 
+    activeNavPage,
+    isCorpusSidebarOpen 
   } = useLegalResearch();
 
   const renderCurrentPage = () => {
@@ -54,8 +55,8 @@ export const AppContent: React.FC = () => {
       case 'workspace':
       default:
         return (
-          <div className="workspace-grid">
-            {/* Left Column: Fixed 5 Curated Legal Documents */}
+          <div className={`workspace-grid ${isCorpusSidebarOpen ? 'sidebar-expanded' : 'sidebar-collapsed'}`}>
+            {/* Left Column: Curated Legal Documents & Sidebar */}
             <DocumentManager />
 
             {/* Right Column: Focused Research Workspace */}

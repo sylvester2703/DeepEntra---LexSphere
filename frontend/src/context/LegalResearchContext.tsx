@@ -33,12 +33,15 @@ interface LegalResearchContextType {
   selectedDocForModal: LegalDocument | null;
   selectedCitationForModal: CitationItem | null;
   isBackendStatusModalOpen: boolean;
+  isCorpusSidebarOpen: boolean;
   queryError: string | null;
   activeNavPage: NavPage;
   
   // Actions
   setActiveNavPage: (page: NavPage) => void;
   toggleMode: (mode: 'demo' | 'live') => void;
+  toggleCorpusSidebar: () => void;
+  setIsCorpusSidebarOpen: (open: boolean) => void;
   refreshHealth: () => Promise<void>;
   refreshDocuments: () => Promise<void>;
   uploadDocument: (file: File, category?: string) => Promise<void>;
@@ -59,6 +62,7 @@ export const LegalResearchProvider: React.FC<{ children: ReactNode }> = ({ child
   const [activeMode, setActiveMode] = useState<'demo' | 'live'>(apiServiceManager.getMode());
   const [documents, setDocuments] = useState<LegalDocument[]>([]);
   const [selectedDocIds, setSelectedDocIds] = useState<string[]>([]);
+  const [isCorpusSidebarOpen, setIsCorpusSidebarOpen] = useState<boolean>(true);
   const [backendHealth, setBackendHealth] = useState<BackendHealthResponse | null>(null);
   
   const [isQuerying, setIsQuerying] = useState<boolean>(false);
@@ -241,6 +245,10 @@ export const LegalResearchProvider: React.FC<{ children: ReactNode }> = ({ child
     setSelectedCitationForModal(null);
   };
 
+  const toggleCorpusSidebar = () => {
+    setIsCorpusSidebarOpen(prev => !prev);
+  };
+
   return (
     <LegalResearchContext.Provider
       value={{
@@ -256,10 +264,13 @@ export const LegalResearchProvider: React.FC<{ children: ReactNode }> = ({ child
         selectedDocForModal,
         selectedCitationForModal,
         isBackendStatusModalOpen,
+        isCorpusSidebarOpen,
         queryError,
         activeNavPage,
         setActiveNavPage,
         toggleMode,
+        toggleCorpusSidebar,
+        setIsCorpusSidebarOpen,
         refreshHealth,
         refreshDocuments,
         uploadDocument,
