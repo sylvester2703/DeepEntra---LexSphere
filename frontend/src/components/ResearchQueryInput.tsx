@@ -15,8 +15,7 @@ export const ResearchQueryInput: React.FC = () => {
     runQuery, 
     selectSampleQuestion, 
     activeQuestionId, 
-    selectedDocIds,
-    documents 
+    selectedDocIds 
   } = useLegalResearch();
 
   const [queryText, setQueryText] = useState<string>(
@@ -59,7 +58,7 @@ export const ResearchQueryInput: React.FC = () => {
         <div className="benchmark-left">
           <span className="benchmark-label">
             <BookMarked size={13} style={{ color: 'var(--brand-leather)' }} />
-            Sample Questions:
+            Sample Inquiries:
           </span>
 
           <div className="benchmark-category-pills">
@@ -103,11 +102,11 @@ export const ResearchQueryInput: React.FC = () => {
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             {selectedDocIds.length > 0 ? (
               <span className="legal-pill legal-pill-verified">
-                <Filter size={10} /> Filtered to {selectedDocIds.length} Selected Document(s)
+                <Filter size={10} /> Filtered to Selected Document(s)
               </span>
             ) : (
               <span className="legal-pill legal-pill-notfound">
-                Searching All {documents.length || 5} Curated Legal Documents
+                Searching Curated Legal Corpus
               </span>
             )}
           </div>

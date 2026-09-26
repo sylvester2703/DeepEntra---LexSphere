@@ -34,7 +34,7 @@ export const ContactPage: React.FC = () => {
     },
     {
       q: 'What legal documents are currently indexed in the platform?',
-      a: 'The current verified benchmark includes 5 landmark authorities: Kailash Nath Associates v. DDA (2015), Indian Contract Act 1872, DPDP Act 2023, Justice K.S. Puttaswamy (2017), and Kesavananda Bharati (1973).'
+      a: 'The current verified benchmark includes landmark authorities: Kailash Nath Associates v. DDA (2015), Indian Contract Act 1872, DPDP Act 2023, Justice K.S. Puttaswamy (2017), and Kesavananda Bharati (1973).'
     },
     {
       q: 'Can law firms deploy LexSphere™ completely on-premises?',

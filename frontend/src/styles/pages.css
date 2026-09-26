@@ -137,7 +137,7 @@
 
 .metric-number {
   font-family: var(--font-display);
-  font-size: 1.65rem;
+  font-size: 1.35rem;
   font-weight: 700;
   color: var(--brand-leather);
 }
@@ -197,24 +197,19 @@
   color: var(--text-secondary);
 }
 
-/* Benchmark Cards */
-.benchmark-cards-grid {
+/* Process & User Guide Styles */
+.process-guide-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.25rem;
+  margin-top: 1.25rem;
 }
 
-@media (max-width: 768px) {
-  .benchmark-cards-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.benchmark-interactive-card {
+.process-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 1.35rem 1.5rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
@@ -222,69 +217,53 @@
   transition: all var(--transition-fast);
 }
 
-.benchmark-interactive-card:hover {
+.process-card:hover {
   border-color: var(--brand-leather);
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
 
-.benchmark-card-badge-row {
+.process-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.benchmark-tag {
+.process-step-pill {
+  font-family: var(--font-mono);
   font-size: 0.725rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--brand-leather);
   background: var(--brand-leather-light);
-  padding: 0.1rem 0.45rem;
+  padding: 0.15rem 0.5rem;
   border-radius: var(--radius-xs);
+  border: 1px solid var(--border-medium);
 }
 
-.benchmark-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.725rem;
-  color: var(--status-verified-text);
-  font-weight: 500;
-}
-
-.benchmark-card-title {
+.process-card-title {
   font-family: var(--font-serif);
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: var(--text-primary);
+  line-height: 1.3;
 }
 
-.benchmark-card-query {
-  font-family: var(--font-serif);
-  font-size: 0.875rem;
+.process-card-desc {
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  line-height: 1.5;
-  font-style: italic;
-  background: var(--bg-surface-subtle);
-  padding: 0.65rem 0.85rem;
-  border-radius: var(--radius-xs);
-  border-left: 2px solid var(--border-medium);
+  line-height: 1.55;
+  flex: 1;
 }
 
-.benchmark-card-cta {
-  display: inline-flex;
+.process-card-meta {
+  display: flex;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.8rem;
+  gap: 0.35rem;
+  font-size: 0.725rem;
+  color: var(--status-verified-text);
   font-weight: 600;
-  color: var(--brand-leather);
-  margin-top: 0.35rem;
-  transition: gap var(--transition-fast);
-}
-
-.benchmark-interactive-card:hover .benchmark-card-cta {
-  color: var(--brand-leather-hover);
-  gap: 0.6rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--border-subtle);
 }
 
 /* Features Grid */
@@ -327,52 +306,6 @@
 }
 
 .feature-desc {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  line-height: 1.55;
-}
-
-/* 3-Step Workflow */
-.workflow-steps-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-}
-
-@media (max-width: 860px) {
-  .workflow-steps-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.workflow-step-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 1.75rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-}
-
-.workflow-step-num {
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--brand-leather);
-  opacity: 0.8;
-}
-
-.workflow-step-title {
-  font-family: var(--font-serif);
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.workflow-step-desc {
   font-size: 0.875rem;
   color: var(--text-secondary);
   line-height: 1.55;

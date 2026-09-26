@@ -99,7 +99,7 @@ export const AboutPage: React.FC = () => {
       <section className="home-section" style={{ marginTop: '2.5rem' }}>
         <div className="section-header-center">
           <div className="section-eyebrow">VERIFIED AUTHORITIES</div>
-          <h2 className="section-title">The Curated 5-Document Benchmark</h2>
+          <h2 className="section-title">Curated Legal Benchmark Corpus</h2>
           <p className="section-desc">
             LexSphere™ is pre-loaded with landmark Indian legal authorities representing key domains of law.
           </p>

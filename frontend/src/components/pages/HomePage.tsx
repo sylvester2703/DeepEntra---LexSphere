@@ -6,21 +6,15 @@ import {
   ArrowRight, 
   CheckCircle2, 
   FileCheck, 
-  Lock
+  Lock,
+  Search,
+  FileText,
+  Copy
 } from 'lucide-react';
 import { useLegalResearch } from '../../context/LegalResearchContext';
-import { SAMPLE_RESEARCH_QUESTIONS } from '../../services/demoData';
 
 export const HomePage: React.FC = () => {
-  const { setActiveNavPage, selectSampleQuestion, documents } = useLegalResearch();
-
-  const handleLaunchSample = (sampleId: string) => {
-    const sample = SAMPLE_RESEARCH_QUESTIONS.find(s => s.id === sampleId);
-    if (sample) {
-      selectSampleQuestion(sample);
-      setActiveNavPage('workspace');
-    }
-  };
+  const { setActiveNavPage } = useLegalResearch();
 
   return (
     <div className="page-container animate-fade-in">
@@ -37,7 +31,7 @@ export const HomePage: React.FC = () => {
           </h1>
 
           <p className="hero-subheadline">
-            Engineered for lawyers, judicial researchers, and law firms. Analyze landmark Indian precedents, verify statutory claims with propositional entailment, and conduct hallucination-free legal discovery.
+            Engineered for advocates, judicial clerks, and law firms. Analyze judicial precedents, verify statutory claims with propositional entailment, and conduct hallucination-free legal discovery.
           </p>
 
           <div className="hero-cta-group">
@@ -56,79 +50,136 @@ export const HomePage: React.FC = () => {
               onClick={() => setActiveNavPage('corpus')}
             >
               <BookOpen size={15} />
-              <span>Explore 5 Curated Documents</span>
+              <span>Explore Legal Corpus</span>
             </button>
           </div>
 
-          {/* Quick Metrics Bar */}
+          {/* Qualitative Pillars Bar */}
           <div className="hero-metrics-grid">
             <div className="metric-box">
-              <span className="metric-number">5</span>
-              <span className="metric-title">Curated Legal Documents</span>
+              <span className="metric-number">Grounding</span>
+              <span className="metric-title">Curated Legal Corpus</span>
               <span className="metric-sub">Supreme Court & Statutes</span>
             </div>
             <div className="metric-box">
-              <span className="metric-number">100%</span>
-              <span className="metric-title">Propositional Verification</span>
-              <span className="metric-sub">Direct Source Entailment</span>
+              <span className="metric-number">Verification</span>
+              <span className="metric-title">Propositional Entailment</span>
+              <span className="metric-sub">Direct Source Proof</span>
             </div>
             <div className="metric-box">
-              <span className="metric-number">Zero</span>
-              <span className="metric-title">Hallucination Tolerance</span>
-              <span className="metric-sub">Strict Source Grounding</span>
+              <span className="metric-number">Accuracy</span>
+              <span className="metric-title">Zero Hallucinations</span>
+              <span className="metric-sub">Strict Source Citation</span>
             </div>
             <div className="metric-box">
-              <span className="metric-number">Privacy</span>
+              <span className="metric-number">Security</span>
               <span className="metric-title">Client Confidentiality</span>
-              <span className="metric-sub">Safe Local Inference</span>
+              <span className="metric-sub">Private Local Inference</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Benchmark Questions Showcase */}
-      <section className="home-section">
+      {/* Comprehensive "How to Use LexSphere" Process Guide */}
+      <section className="home-section" style={{ background: '#ffffff', borderRadius: 'var(--radius-lg)', padding: '3rem 2.5rem', border: '1px solid var(--border-subtle)' }}>
         <div className="section-header-center">
-          <div className="section-eyebrow">READY-TO-EXPLORE BENCHMARKS</div>
-          <h2 className="section-title">Verified Legal Research Scenarios</h2>
+          <div className="section-eyebrow">RESEARCH WORKFLOW & USER GUIDE</div>
+          <h2 className="section-title">How to Use LexSphere™ for Legal Research</h2>
           <p className="section-desc">
-            Explore pre-verified answers and citation audits grounded in our verified Indian legal corpus.
+            A systematic, five-stage legal discovery workflow designed for precision, auditability, and court-ready work product.
           </p>
         </div>
 
-        <div className="benchmark-cards-grid">
-          {SAMPLE_RESEARCH_QUESTIONS.map((sample) => (
-            <div key={sample.id} className="benchmark-interactive-card">
-              <div className="benchmark-card-badge-row">
-                <span className="benchmark-tag">{sample.category}</span>
-                <span className="benchmark-status">
-                  <CheckCircle2 size={12} /> Verified
-                </span>
-              </div>
-
-              <h3 className="benchmark-card-title">{sample.title}</h3>
-              <p className="benchmark-card-query">"{sample.query}"</p>
-
-              <button
-                type="button"
-                className="benchmark-card-cta"
-                onClick={() => handleLaunchSample(sample.id)}
-              >
-                <span>Analyze Scenario in Workspace</span>
-                <ArrowRight size={13} />
-              </button>
+        <div className="process-guide-grid">
+          {/* Step 1 */}
+          <div className="process-card">
+            <div className="process-card-header">
+              <span className="process-step-pill">Stage 01</span>
+              <BookOpen size={18} style={{ color: 'var(--brand-leather)' }} />
             </div>
-          ))}
+            <h3 className="process-card-title">Select Legal Authorities</h3>
+            <p className="process-card-desc">
+              Filter by practice area (Contract Law, Constitutional Law, Privacy Law) or select specific judicial rulings and acts in the sidebar to scope your query.
+            </p>
+            <div className="process-card-meta">
+              <CheckCircle2 size={12} style={{ color: 'var(--status-verified-text)' }} />
+              <span>Targeted Corpus Discovery</span>
+            </div>
+          </div>
+
+          {/* Step 2 */}
+          <div className="process-card">
+            <div className="process-card-header">
+              <span className="process-step-pill">Stage 02</span>
+              <Search size={18} style={{ color: 'var(--brand-leather)' }} />
+            </div>
+            <h3 className="process-card-title">Formulate Legal Inquiries</h3>
+            <p className="process-card-desc">
+              Enter natural language questions regarding statutory interpretation, liability standards, or ratios. Choose from benchmark templates or type custom inquiries.
+            </p>
+            <div className="process-card-meta">
+              <CheckCircle2 size={12} style={{ color: 'var(--status-verified-text)' }} />
+              <span>Doctrine & Statutory Inquiry</span>
+            </div>
+          </div>
+
+          {/* Step 3 */}
+          <div className="process-card">
+            <div className="process-card-header">
+              <span className="process-step-pill">Stage 03</span>
+              <FileCheck size={18} style={{ color: 'var(--brand-leather)' }} />
+            </div>
+            <h3 className="process-card-title">Review Grounded Analysis</h3>
+            <p className="process-card-desc">
+              Read concise, structured legal findings where every single sentence is linked directly to authoritative sources via interactive citation chips ([1], [2]).
+            </p>
+            <div className="process-card-meta">
+              <CheckCircle2 size={12} style={{ color: 'var(--status-verified-text)' }} />
+              <span>Zero Hallucination Guarantee</span>
+            </div>
+          </div>
+
+          {/* Step 4 */}
+          <div className="process-card">
+            <div className="process-card-header">
+              <span className="process-step-pill">Stage 04</span>
+              <ShieldCheck size={18} style={{ color: 'var(--brand-leather)' }} />
+            </div>
+            <h3 className="process-card-title">Audit Verbatim Judicial Proof</h3>
+            <p className="process-card-desc">
+              Click any citation badge to inspect the exact verbatim paragraph, section clause, and propositional entailment rationale in the verification audit tab.
+            </p>
+            <div className="process-card-meta">
+              <CheckCircle2 size={12} style={{ color: 'var(--status-verified-text)' }} />
+              <span>One-Click Evidence Inspection</span>
+            </div>
+          </div>
+
+          {/* Step 5 */}
+          <div className="process-card">
+            <div className="process-card-header">
+              <span className="process-step-pill">Stage 05</span>
+              <Copy size={18} style={{ color: 'var(--brand-leather)' }} />
+            </div>
+            <h3 className="process-card-title">Export Verified Work Product</h3>
+            <p className="process-card-desc">
+              Copy verified analysis directly into court petitions, legal opinions, or memos with full confidence that every cited authority is sound.
+            </p>
+            <div className="process-card-meta">
+              <CheckCircle2 size={12} style={{ color: 'var(--status-verified-text)' }} />
+              <span>Court-Ready Brief Integration</span>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Core Platform Capabilities Grid */}
-      <section className="home-section" style={{ background: '#ffffff', borderRadius: 'var(--radius-lg)', padding: '3rem 2.5rem', border: '1px solid var(--border-subtle)' }}>
+      <section className="home-section">
         <div className="section-header-center">
-          <div className="section-eyebrow">ARCHITECTURAL RIGOR</div>
-          <h2 className="section-title">Why Legal Practitioners Trust LexSphere™</h2>
+          <div className="section-eyebrow">ENTERPRISE ASSURANCE</div>
+          <h2 className="section-title">Built for Legal Precision</h2>
           <p className="section-desc">
-            Unlike generic generative AI, LexSphere™ enforces strict judicial ratio extraction and verifiable evidence.
+            Designed specifically for law firms requiring verifiable evidence and strict data governance.
           </p>
         </div>
 
@@ -149,15 +200,15 @@ export const HomePage: React.FC = () => {
             </div>
             <h3 className="feature-title">Authoritative Indian Corpus</h3>
             <p className="feature-desc">
-              Pre-loaded with foundational Indian jurisprudence including the Contract Act 1872, DPDP Act 2023, and Constitution Bench precedents.
+              Pre-loaded with foundational Indian jurisprudence including the Contract Act 1872, DPDP Act 2023, and landmark Constitution Bench precedents.
             </p>
           </div>
 
           <div className="feature-item-card">
             <div className="feature-icon-wrapper">
-              <FileCheck size={22} />
+              <FileText size={22} />
             </div>
-            <h3 className="feature-title">Interactive Audit Trails</h3>
+            <h3 className="feature-title">Deep-Linked Audit Trails</h3>
             <p className="feature-desc">
               Clickable citation chips ([1], [2]) seamlessly navigate to verbatim paragraphs, section clauses, and judicial reasoning.
             </p>
@@ -175,48 +226,14 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 3-Step Workflow */}
-      <section className="home-section">
-        <div className="section-header-center">
-          <div className="section-eyebrow">HOW LEXSPHERE™ OPERATES</div>
-          <h2 className="section-title">3-Step Grounded Research Workflow</h2>
-        </div>
-
-        <div className="workflow-steps-grid">
-          <div className="workflow-step-card">
-            <div className="workflow-step-num">01</div>
-            <h3 className="workflow-step-title">Inquire</h3>
-            <p className="workflow-step-desc">
-              Enter a complex legal question, statutory interpretation inquiry, or doctrine analysis in natural language.
-            </p>
-          </div>
-
-          <div className="workflow-step-card">
-            <div className="workflow-step-num">02</div>
-            <h3 className="workflow-step-title">Ground</h3>
-            <p className="workflow-step-desc">
-              The system identifies exact relevant statutory sections and judicial paragraphs across the 5 verified documents.
-            </p>
-          </div>
-
-          <div className="workflow-step-card">
-            <div className="workflow-step-num">03</div>
-            <h3 className="workflow-step-title">Verify</h3>
-            <p className="workflow-step-desc">
-              Independent propositional validation generates an evidence audit with deep-linked citations and zero hallucinations.
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* Bottom CTA Banner */}
       <section className="home-cta-banner">
         <div className="cta-banner-content">
           <h2 className="cta-banner-title">
-            Start Your Verifiable Legal Research Today
+            Start Your Verifiable Legal Research
           </h2>
           <p className="cta-banner-desc">
-            Explore {documents.length || 5} curated landmark Indian judgments and statutory codes with instant citation verification.
+            Explore curated landmark Indian judgments and statutory codes with instant citation verification.
           </p>
           <button
             type="button"

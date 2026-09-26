@@ -71,7 +71,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <span className="footer-nav-link" onClick={() => handleNav('corpus')}>
-                  5 Curated Legal Documents
+                  Curated Legal Documents
                 </span>
               </li>
               <li>
@@ -158,7 +158,7 @@ export const Footer: React.FC = () => {
             © 2026 LexSphere™ Technologies Inc. All rights reserved. LexSphere™ is a registered trademark.
           </div>
           <div style={{ fontSize: '0.725rem' }}>
-            Curated 5-Document Legal Corpus • Independent Entailment Verification
+            Curated Legal Corpus • Independent Entailment Verification
           </div>
         </div>
       </div>

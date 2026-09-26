@@ -33,10 +33,9 @@ export const DocumentManager: React.FC = () => {
             <BookOpen size={16} style={{ color: 'var(--brand-leather)' }} />
             Legal Corpus
           </h2>
-          <span className="docs-count-pill">{documents.length || 5}</span>
         </div>
         <p className="docs-subtitle">
-          5 Verified statutory codes & landmark judgments
+          Verified statutory codes & landmark judicial precedents
         </p>
       </div>
 
@@ -54,7 +53,7 @@ export const DocumentManager: React.FC = () => {
         ))}
       </div>
 
-      {/* 5 Curated Document Cards */}
+      {/* Curated Document Cards */}
       <div className="docs-cards-list" role="list">
         {filteredDocs.map((doc: LegalDocument) => {
           const isSelected = selectedDocIds.includes(doc.id);

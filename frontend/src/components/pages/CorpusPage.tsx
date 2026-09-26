@@ -30,7 +30,6 @@ export const CorpusPage: React.FC = () => {
   });
 
   const handleSearchDocInWorkspace = (doc: LegalDocument) => {
-    // Find matching sample question or select doc
     const sample = SAMPLE_RESEARCH_QUESTIONS.find(s => s.relatedDocIds.includes(doc.id));
     if (sample) {
       selectSampleQuestion(sample);
@@ -50,7 +49,7 @@ export const CorpusPage: React.FC = () => {
         </div>
         <h1 className="page-title">Curated Legal Documents & Statutes</h1>
         <p className="page-subtitle">
-          Explore the 5 landmark judicial decisions and statutory codes verified and indexed for citation grounding in LexSphere™.
+          Explore the landmark judicial decisions and statutory codes verified and indexed for citation grounding in LexSphere™.
         </p>
       </section>
 
@@ -70,7 +69,7 @@ export const CorpusPage: React.FC = () => {
         </div>
 
         <span className="corpus-total-count">
-          Showing {filteredDocs.length} of {documents.length} verified authorities
+          Verified Statutory Codes & Judicial Rulings
         </span>
       </div>
 
@@ -140,7 +139,7 @@ export const CorpusPage: React.FC = () => {
               100% Verifiable Source Grounding Guarantee
             </h3>
             <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', marginTop: '0.3rem', lineHeight: 1.55 }}>
-              All 5 legal documents have been digitally processed, chunked with semantic legal boundaries, and paired with an independent propositional verification engine. Every response generated in the workspace links directly to verifiable text within these authorities.
+              All legal corpus documents have been digitally processed, chunked with semantic legal boundaries, and paired with an independent propositional verification engine. Every response generated in the workspace links directly to verifiable text within these authorities.
             </p>
           </div>
         </div>
