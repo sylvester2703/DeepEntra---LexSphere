@@ -55,6 +55,37 @@ def sigmoid(x: float) -> float:
     return 1.0 / (1.0 + math.exp(-x))
 
 
+# Everyday-language questions ("Can someone stuck in jail for years get bail?") get low
+# absolute cross-encoder scores even when retrieval found the right judgment. What marks
+# them as on-topic is that one judgment clearly stands out from all the others; for
+# off-topic questions every judgment scores about equally badly.
+DOMINANT_MIN_SCORE = -6.0  # never accept a passage scoring below this
+DOMINANT_GAP = 4.0  # lead over the best passage from any other judgment
+SAME_DOC_WINDOW = 3.0  # other passages of the dominant judgment within this of its best
+SINGLE_DOC_MIN_SCORE = -3.0  # floor when every retrieved passage is from one judgment
+
+
+def relevant_passage_indices(passages: list[dict]) -> list[int]:
+    """Indices of passages relevant enough to answer from, in retrieval order."""
+    relevant = [i for i, p in enumerate(passages) if p["retrieval_score"] >= RELEVANT_PASSAGE_SCORE]
+    if relevant or not passages:
+        return relevant
+    top = max(range(len(passages)), key=lambda i: passages[i]["retrieval_score"])
+    top_doc, top_score = passages[top]["document"], passages[top]["retrieval_score"]
+    others = [p["retrieval_score"] for p in passages if p["document"] != top_doc]
+    if others:
+        if top_score < DOMINANT_MIN_SCORE or top_score - max(others) < DOMINANT_GAP:
+            return []
+    elif len(passages) < 2 or top_score < SINGLE_DOC_MIN_SCORE:
+        # Every retrieved passage is from one judgment (no rival to compare against):
+        # accept only with a stricter floor, and never on a single passage
+        return []
+    return [
+        i for i, p in enumerate(passages)
+        if p["document"] == top_doc and p["retrieval_score"] >= max(DOMINANT_MIN_SCORE, top_score - SAME_DOC_WINDOW)
+    ]
+
+
 @dataclass
 class Claim:
     marker: str  # "[1]"
@@ -105,7 +136,7 @@ def build_llm_context(
 ) -> list[dict]:
     """Relevant passages only, each trimmed to its most relevant ~220-word window, so
     the prompt stays small (fast on CPU, and within the model's context window)."""
-    relevant = [i for i, p in enumerate(passages) if p["retrieval_score"] >= RELEVANT_PASSAGE_SCORE]
+    relevant = relevant_passage_indices(passages)
     contexts = []
     for i in relevant[:max_passages]:
         windows = word_windows(passages[i]["text"], 220, 150)
@@ -277,7 +308,7 @@ def _is_heading(sentence: str) -> bool:
 def extractive_answer(
     query: str, passages: list[dict], reranker: CrossEncoderReranker, max_sentences: int = 4
 ) -> GeneratedAnswer:
-    relevant = [i for i, p in enumerate(passages) if p["retrieval_score"] >= RELEVANT_PASSAGE_SCORE]
+    relevant = relevant_passage_indices(passages)
     if not relevant:
         return GeneratedAnswer(NOT_COVERED_ANSWER, model="extractive")
 

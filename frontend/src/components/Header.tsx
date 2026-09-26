@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scale, Home, Search, Info, Mail, LucideIcon, ArrowRight } from 'lucide-react';
+import { Scale, Home, Search, LucideIcon, ArrowRight } from 'lucide-react';
 import { useLegalResearch, NavPage } from '../context/LegalResearchContext';
 
 export const Header: React.FC = () => {
@@ -11,8 +11,6 @@ export const Header: React.FC = () => {
   const navItems: { id: NavPage; label: string; icon: LucideIcon }[] = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'workspace', label: 'Workspace', icon: Search },
-    { id: 'about', label: 'About', icon: Info },
-    { id: 'contact', label: 'Contact', icon: Mail },
   ];
 
   return (

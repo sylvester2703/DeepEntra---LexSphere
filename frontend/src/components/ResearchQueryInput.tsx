@@ -20,13 +20,6 @@ export const ResearchQueryInput: React.FC = () => {
     runQuery(queryText);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      e.preventDefault();
-      handleSubmit();
-    }
-  };
-
   return (
     <div className="research-workspace" aria-label="Legal Research Query Workspace">
       {/* Central Query Input Card */}
@@ -42,7 +35,6 @@ export const ResearchQueryInput: React.FC = () => {
             className="query-textarea-box"
             value={queryText}
             onChange={(e) => setQueryText(e.target.value)}
-            onKeyDown={handleKeyDown}
             placeholder="Enter a legal research inquiry, statutory interpretation question, or precedent analysis..."
             rows={3}
             disabled={isQuerying}
@@ -51,10 +43,6 @@ export const ResearchQueryInput: React.FC = () => {
 
           {/* Action Row */}
           <div className="query-actions-bar">
-            <span style={{ fontSize: '0.725rem', color: 'var(--text-subtle)' }}>
-              Press <kbd style={{ padding: '0.1rem 0.35rem', background: 'var(--bg-surface-subtle)', border: '1px solid var(--border-light)', borderRadius: '3px', fontFamily: 'var(--font-mono)' }}>Ctrl + Enter</kbd> to analyze
-            </span>
-
             <button
               type="submit"
               className="btn-primary"

@@ -5,15 +5,12 @@ import {
   Check, 
   ShieldCheck, 
   AlertTriangle, 
-  ExternalLink, 
-  BookOpen, 
-  FileText, 
-  Info, 
+  ExternalLink,
   CheckCircle2,
   Scale
 } from 'lucide-react';
 import { useLegalResearch } from '../context/LegalResearchContext';
-import { CitationItem, RetrievedPassage, CitationVerificationStatus } from '../types/legal';
+import { CitationItem, CitationVerificationStatus } from '../types/legal';
 
 export const GroundedAnswerWorkspace: React.FC = () => {
   const { 
@@ -24,12 +21,12 @@ export const GroundedAnswerWorkspace: React.FC = () => {
     documents 
   } = useLegalResearch();
 
-  const [activeTab, setActiveTab] = useState<'analysis' | 'sources' | 'verification'>('analysis');
+  const [activeTab, setActiveTab] = useState<'analysis' | 'verification'>('analysis');
   const [copied, setCopied] = useState<boolean>(false);
 
   if (!activeResearch) return null;
 
-  const { groundedAnswer, citations, supportingPassages } = activeResearch;
+  const { groundedAnswer, citations } = activeResearch;
 
   const verifiedCount = citations.filter(c => c.verificationStatus === 'verified').length;
   const partialCount = citations.filter(c => c.verificationStatus === 'partially_verified').length;
@@ -102,11 +99,6 @@ export const GroundedAnswerWorkspace: React.FC = () => {
     }
   };
 
-  const handleOpenPassageDoc = (passage: RetrievedPassage) => {
-    const doc = documents.find(d => d.id === passage.documentId);
-    if (doc) openDocModal(doc);
-  };
-
   /**
    * Parse paragraphs and format inline citations as interactive chips
    */
@@ -177,18 +169,6 @@ export const GroundedAnswerWorkspace: React.FC = () => {
           <button
             type="button"
             role="tab"
-            aria-selected={activeTab === 'sources'}
-            className={`response-tab-btn ${activeTab === 'sources' ? 'active' : ''}`}
-            onClick={() => setActiveTab('sources')}
-          >
-            <BookOpen size={14} />
-            <span>Supporting Sources</span>
-            <span className="tab-badge-pill">{supportingPassages.length}</span>
-          </button>
-
-          <button
-            type="button"
-            role="tab"
             aria-selected={activeTab === 'verification'}
             className={`response-tab-btn ${activeTab === 'verification' ? 'active' : ''}`}
             onClick={() => setActiveTab('verification')}
@@ -242,42 +222,7 @@ export const GroundedAnswerWorkspace: React.FC = () => {
         </div>
       )}
 
-      {/* Tab 2: Supporting Sources */}
-      {activeTab === 'sources' && (
-        <div className="tab-content-container">
-          <div className="sources-tab-list" role="list">
-            {supportingPassages.map((passage) => (
-              <div key={passage.id} className="source-item-card" role="listitem">
-                <div className="source-card-header">
-                  <div>
-                    <h4 className="source-card-title">{passage.documentTitle}</h4>
-                    <div className="source-card-sub">
-                      {passage.court} • {passage.citation} • Page {passage.pageNumber} {passage.paragraphNumber ? `(${passage.paragraphNumber})` : ''}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="source-excerpt-text">
-                  "{passage.excerpt}"
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.15rem' }}>
-                  <button
-                    type="button"
-                    className="btn-ghost"
-                    onClick={() => handleOpenPassageDoc(passage)}
-                    style={{ fontSize: '0.725rem', padding: '0.2rem 0.4rem', color: 'var(--brand-leather)' }}
-                  >
-                    <FileText size={11} /> View Source Context
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Tab 3: Citation Verification */}
+      {/* Tab 2: Citation Verification */}
       {activeTab === 'verification' && (
         <div className="tab-content-container">
           <div className="citations-audit-list" role="list">
@@ -322,21 +267,6 @@ export const GroundedAnswerWorkspace: React.FC = () => {
                       >
                         <ExternalLink size={10} /> Open Reference
                       </button>
-                    </div>
-
-                    <div className="audit-source-excerpt">
-                      "{cit.sourceExcerpt}"
-                    </div>
-                  </div>
-
-                  {/* Verification Evidence & Rationale */}
-                  <div className="audit-rationale-box">
-                    <Info size={13} style={{ color: 'var(--brand-leather)', flexShrink: 0, marginTop: '0.1rem' }} />
-                    <div>
-                      <strong style={{ color: 'var(--text-primary)', marginRight: '0.3rem' }}>
-                        Verification Evidence:
-                      </strong>
-                      <span>{cit.verificationRationale}</span>
                     </div>
                   </div>
                 </div>

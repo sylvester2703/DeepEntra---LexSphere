@@ -1,15 +1,10 @@
 import React from 'react';
 import { 
-  ShieldCheck, 
-  BookOpen, 
-  ArrowRight, 
-  CheckCircle2, 
-  FileCheck, 
-  Lock, 
-  Search, 
-  FileText, 
-  Copy,
-  Info
+  ShieldCheck,
+  ArrowRight,
+  CheckCircle2,
+  FileCheck,
+  Search
 } from 'lucide-react';
 import { useLegalResearch } from '../../context/LegalResearchContext';
 
@@ -27,7 +22,7 @@ export const HomePage: React.FC = () => {
           </h1>
 
           <p className="hero-subheadline">
-            Engineered for advocates, judicial clerks, and law firms. Analyze judicial precedents, verify statutory claims with propositional entailment, and conduct hallucination-free legal discovery.
+            Built for lawyers and legal professionals to quickly find relevant judgments, verify legal information, and get reliable AI-powered legal assistance.
           </p>
 
           <div className="hero-cta-group">
@@ -38,15 +33,6 @@ export const HomePage: React.FC = () => {
             >
               <span>Launch Research Workspace</span>
               <ArrowRight size={16} />
-            </button>
-
-            <button
-              type="button"
-              className="btn-secondary hero-btn-sub"
-              onClick={() => setActiveNavPage('about')}
-            >
-              <Info size={15} />
-              <span>About Platform</span>
             </button>
           </div>
 
@@ -66,11 +52,6 @@ export const HomePage: React.FC = () => {
               <span className="metric-number">Precision</span>
               <span className="metric-title">Zero Hallucinations</span>
               <span className="metric-sub">Strict Source Citation</span>
-            </div>
-            <div className="metric-box">
-              <span className="metric-number">Security</span>
-              <span className="metric-title">Client Confidentiality</span>
-              <span className="metric-sub">Private Local Inference</span>
             </div>
           </div>
         </div>
@@ -95,7 +76,7 @@ export const HomePage: React.FC = () => {
             </div>
             <h3 className="process-card-title">Formulate Legal Inquiries</h3>
             <p className="process-card-desc">
-              Enter natural language questions regarding statutory interpretation, liability standards, or ratios. Choose from benchmark templates or type custom inquiries.
+              Enter natural language questions regarding legal issues, statutes, or case law. 
             </p>
             <div className="process-card-meta">
               <CheckCircle2 size={12} style={{ color: 'var(--status-verified-text)' }} />
@@ -125,104 +106,15 @@ export const HomePage: React.FC = () => {
               <span className="process-step-pill">Stage 03</span>
               <ShieldCheck size={18} style={{ color: 'var(--brand-leather)' }} />
             </div>
-            <h3 className="process-card-title">Audit Verbatim Judicial Proof</h3>
+            <h3 className="process-card-title">Audit Judicial Proof</h3>
             <p className="process-card-desc">
-              Click any citation badge to inspect the exact verbatim paragraph, section clause, and propositional entailment rationale in the verification audit tab.
+              Click any citation badge to inspect the exact paragraph, section clause, and propositions in the verification audit tab.
             </p>
             <div className="process-card-meta">
               <CheckCircle2 size={12} style={{ color: 'var(--status-verified-text)' }} />
               <span>One-Click Evidence Inspection</span>
             </div>
           </div>
-
-          {/* Step 4 */}
-          <div className="process-card">
-            <div className="process-card-header">
-              <span className="process-step-pill">Stage 04</span>
-              <Copy size={18} style={{ color: 'var(--brand-leather)' }} />
-            </div>
-            <h3 className="process-card-title">Export Verified Work Product</h3>
-            <p className="process-card-desc">
-              Copy verified analysis directly into court petitions, legal opinions, or memos with full confidence that every cited authority is sound.
-            </p>
-            <div className="process-card-meta">
-              <CheckCircle2 size={12} style={{ color: 'var(--status-verified-text)' }} />
-              <span>Court-Ready Brief Integration</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Core Platform Capabilities Grid */}
-      <section className="home-section">
-        <div className="section-header-center">
-          <div className="section-eyebrow">ENTERPRISE ASSURANCE</div>
-          <h2 className="section-title">Built for Legal Precision</h2>
-          <p className="section-desc">
-            Designed specifically for law firms requiring verifiable evidence and strict data governance.
-          </p>
-        </div>
-
-        <div className="features-grid">
-          <div className="feature-item-card">
-            <div className="feature-icon-wrapper">
-              <ShieldCheck size={22} />
-            </div>
-            <h3 className="feature-title">Independent Citation Verification</h3>
-            <p className="feature-desc">
-              Every factual assertion and statutory claim undergoes proposition-level entailment verification against the source document.
-            </p>
-          </div>
-
-          <div className="feature-item-card">
-            <div className="feature-icon-wrapper">
-              <BookOpen size={22} />
-            </div>
-            <h3 className="feature-title">Grounded Legal Precedent</h3>
-            <p className="feature-desc">
-              Synthesizes arguments strictly from verified statutory frameworks and Constitution Bench jurisprudence without external hallucinations.
-            </p>
-          </div>
-
-          <div className="feature-item-card">
-            <div className="feature-icon-wrapper">
-              <FileText size={22} />
-            </div>
-            <h3 className="feature-title">Deep-Linked Audit Trails</h3>
-            <p className="feature-desc">
-              Clickable citation chips ([1], [2]) seamlessly navigate to verbatim paragraphs, section clauses, and judicial reasoning.
-            </p>
-          </div>
-
-          <div className="feature-item-card">
-            <div className="feature-icon-wrapper">
-              <Lock size={22} />
-            </div>
-            <h3 className="feature-title">Enterprise Data Confidentiality</h3>
-            <p className="feature-desc">
-              Designed with enterprise security standards ensuring zero external data leakage and robust client privilege protections.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Bottom CTA Banner */}
-      <section className="home-cta-banner">
-        <div className="cta-banner-content">
-          <h2 className="cta-banner-title">
-            Start Your Verifiable Legal Research
-          </h2>
-          <p className="cta-banner-desc">
-            Analyze complex statutory provisions and landmark jurisprudence with instant citation verification.
-          </p>
-          <button
-            type="button"
-            className="btn-primary cta-banner-btn"
-            onClick={() => setActiveNavPage('workspace')}
-          >
-            <span>Open LexSphere™ Workspace</span>
-            <ArrowRight size={16} />
-          </button>
         </div>
       </section>
     </div>

@@ -47,6 +47,27 @@ def test_guardrails_drop_uncited_sentences_and_flag_outside_authorities():
     assert answer_generator.foreign_authorities("Per Mohd. Muslim v. State [1].", contexts, passages) == []
 
 
+def test_relevance_gate_accepts_plain_language_but_not_off_topic():
+    def passages(*pairs):
+        return [{"document": d, "retrieval_score": s} for d, s in pairs]
+
+    rel = answer_generator.relevant_passage_indices
+    assert rel(passages(("a", 1.2), ("b", -9))) == [0]  # clearly relevant
+    assert rel(passages(("a", -1.5), ("b", -10.8), ("c", -11))) == [0]  # one judgment stands out
+    assert rel(passages(("a", -1.0), ("b", -2.1), ("c", -5.8))) == []  # no clear winner (off-topic)
+    assert rel(passages(("a", -7.4), ("b", -12))) == []  # too weak even with a big lead
+    assert rel(passages(("a", -1.8), ("a", -1.9), ("a", -5))) == [0, 1]  # one long judgment only
+    assert rel(passages(("a", -3.3), ("a", -4))) == []  # ...but not below its stricter floor
+
+
+def test_plain_language_question_is_answered(client):
+    body = client.post("/api/research/query", json={
+        "query": "Can a landlord evict a tenant who rented out the shop to someone else without permission?"}).json()
+    assert body["citations"] and "Rashmi" in body["citations"][0]["source_document_title"]
+    off_topic = client.post("/api/research/query", json={"query": "What is the punishment for theft?"}).json()
+    assert off_topic["citations"] == []
+
+
 def test_ollama_answer_is_grounded_or_rejected(client, monkeypatch):
     monkeypatch.setenv("OLLAMA_ENABLED", "1")
     connected, model = answer_generator.ollama_status()
