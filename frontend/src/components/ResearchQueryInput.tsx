@@ -2,16 +2,12 @@ import React, { useState } from 'react';
 import { 
   Search, 
   Sparkles, 
-  SlidersHorizontal, 
   ArrowRight, 
   BookMarked, 
-  ChevronDown, 
-  ChevronUp, 
-  Filter 
+  Filter
 } from 'lucide-react';
 import { useLegalResearch } from '../context/LegalResearchContext';
 import { SAMPLE_RESEARCH_QUESTIONS } from '../services/demoData';
-import { SearchRetrievalMode } from '../types/legal';
 
 export const ResearchQueryInput: React.FC = () => {
   const { 
@@ -27,24 +23,18 @@ export const ResearchQueryInput: React.FC = () => {
     SAMPLE_RESEARCH_QUESTIONS[0]?.query || ''
   );
   const [selectedBenchmarkCat, setSelectedBenchmarkCat] = useState<string>('All');
-  const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
-  const [searchMode, setSearchMode] = useState<SearchRetrievalMode>('hybrid');
-  const [topK, setTopK] = useState<number>(5);
 
   const benchmarkCategories = ['All', 'Contract Law', 'Constitutional Law', 'Privacy Law'];
 
   const filteredBenchmarks = SAMPLE_RESEARCH_QUESTIONS.filter(b => {
     if (selectedBenchmarkCat === 'All') return true;
-    if (selectedBenchmarkCat === 'Contract Law') return b.category.includes('Contract');
-    if (selectedBenchmarkCat === 'Constitutional Law') return b.category.includes('Constitutional');
-    if (selectedBenchmarkCat === 'Privacy Law') return b.category.includes('Privacy');
-    return true;
+    return b.category === selectedBenchmarkCat;
   });
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!queryText.trim() || isQuerying) return;
-    runQuery(queryText, { searchMode, topK });
+    runQuery(queryText);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -63,13 +53,13 @@ export const ResearchQueryInput: React.FC = () => {
   };
 
   return (
-    <div className="research-workspace" aria-label="Legal Research Query Interface">
-      {/* Compact Benchmark Selector Bar */}
+    <div className="research-workspace" aria-label="Legal Research Query Workspace">
+      {/* Benchmark Selector Bar */}
       <div className="benchmark-compact-bar">
         <div className="benchmark-left">
           <span className="benchmark-label">
             <BookMarked size={13} style={{ color: 'var(--brand-leather)' }} />
-            Legal Benchmarks:
+            Research Benchmarks:
           </span>
 
           <div className="benchmark-category-pills">
@@ -86,7 +76,7 @@ export const ResearchQueryInput: React.FC = () => {
           </div>
         </div>
 
-        {/* Compact Dropdown to Load Benchmark Query */}
+        {/* Dropdown to Load Benchmark Query */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
           <select
             className="benchmark-dropdown-select"
@@ -104,32 +94,32 @@ export const ResearchQueryInput: React.FC = () => {
         </div>
       </div>
 
-      {/* Central Query Card */}
+      {/* Central Query Input Card */}
       <div className="query-card-container">
         <div className="query-card-top-row">
           <h2 className="query-title-text">
             Legal Question & Statutory Query
           </h2>
-          <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             {selectedDocIds.length > 0 ? (
               <span className="legal-pill legal-pill-verified">
-                <Filter size={10} /> Filtered to {selectedDocIds.length} Document(s)
+                <Filter size={10} /> Filtered to {selectedDocIds.length} Selected Document(s)
               </span>
             ) : (
               <span className="legal-pill legal-pill-notfound">
-                Searching All {documents.length} Corpus Documents
+                Searching All {documents.length} Curated Legal Documents
               </span>
             )}
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
           <textarea
             className="query-textarea-box"
             value={queryText}
             onChange={(e) => setQueryText(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Enter legal research inquiry, statutory interpretation question, or precedent analysis..."
+            placeholder="Enter a legal research inquiry, statutory interpretation question, or precedent analysis..."
             rows={3}
             disabled={isQuerying}
             aria-label="Legal question input"
@@ -137,76 +127,30 @@ export const ResearchQueryInput: React.FC = () => {
 
           {/* Action Row */}
           <div className="query-actions-bar">
-            <button
-              type="button"
-              className="advanced-toggle-btn"
-              onClick={() => setShowAdvanced(!showAdvanced)}
-            >
-              <SlidersHorizontal size={12} />
-              <span>Retrieval Configuration</span>
-              {showAdvanced ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-            </button>
+            <span style={{ fontSize: '0.725rem', color: 'var(--text-subtle)' }}>
+              Press <kbd style={{ padding: '0.1rem 0.35rem', background: 'var(--bg-surface-subtle)', border: '1px solid var(--border-light)', borderRadius: '3px', fontFamily: 'var(--font-mono)' }}>Ctrl + Enter</kbd> to analyze
+            </span>
 
             <button
               type="submit"
               className="btn-primary"
               disabled={isQuerying || !queryText.trim()}
-              title="Execute RAG retrieval and citation verification"
+              title="Analyze question and verify legal citations"
             >
               {isQuerying ? (
                 <>
-                  <Sparkles size={15} className="animate-spin" />
+                  <Sparkles size={14} className="animate-spin" />
                   Analyzing Legal Corpus...
                 </>
               ) : (
                 <>
-                  <Search size={15} />
-                  Analyze & Verify Claims
-                  <ArrowRight size={14} />
+                  <Search size={14} />
+                  Analyze & Verify
+                  <ArrowRight size={13} />
                 </>
               )}
             </button>
           </div>
-
-          {/* Collapsible Advanced Retrieval Parameters (Hidden by default) */}
-          {showAdvanced && (
-            <div className="advanced-settings-drawer">
-              <div className="setting-col">
-                <label className="setting-label">Retrieval Mode</label>
-                <select 
-                  className="setting-select"
-                  value={searchMode}
-                  onChange={(e) => setSearchMode(e.target.value as SearchRetrievalMode)}
-                  disabled={isQuerying}
-                >
-                  <option value="hybrid">Hybrid (BM25 + Dense Reranked)</option>
-                  <option value="bm25">BM25 Sparse Lexical Only</option>
-                  <option value="semantic">Dense Vector Embeddings Only</option>
-                </select>
-              </div>
-
-              <div className="setting-col">
-                <label className="setting-label">Passage Context Window (Top-K)</label>
-                <select 
-                  className="setting-select"
-                  value={topK}
-                  onChange={(e) => setTopK(Number(e.target.value))}
-                  disabled={isQuerying}
-                >
-                  <option value={3}>3 Passages (High Precision)</option>
-                  <option value={5}>5 Passages (Balanced Standard)</option>
-                  <option value={8}>8 Passages (Comprehensive)</option>
-                </select>
-              </div>
-
-              <div className="setting-col">
-                <label className="setting-label">Target Model</label>
-                <select className="setting-select" disabled>
-                  <option>Llama 3 8B (Local Ollama via FastAPI)</option>
-                </select>
-              </div>
-            </div>
-          )}
         </form>
       </div>
     </div>

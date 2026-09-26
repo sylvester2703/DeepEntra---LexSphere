@@ -5,12 +5,12 @@ import {
   Check, 
   ShieldCheck, 
   AlertTriangle, 
-  HelpCircle, 
   ExternalLink, 
   BookOpen, 
   FileText, 
   Info, 
-  CheckCircle2 
+  CheckCircle2,
+  Scale
 } from 'lucide-react';
 import { useLegalResearch } from '../context/LegalResearchContext';
 import { CitationItem, RetrievedPassage, CitationVerificationStatus } from '../types/legal';
@@ -24,7 +24,7 @@ export const GroundedAnswerWorkspace: React.FC = () => {
     documents 
   } = useLegalResearch();
 
-  const [activeTab, setActiveTab] = useState<'answer' | 'sources' | 'verification'>('answer');
+  const [activeTab, setActiveTab] = useState<'analysis' | 'sources' | 'verification'>('analysis');
   const [copied, setCopied] = useState<boolean>(false);
 
   if (!activeResearch) return null;
@@ -34,7 +34,6 @@ export const GroundedAnswerWorkspace: React.FC = () => {
   const verifiedCount = citations.filter(c => c.verificationStatus === 'verified').length;
   const partialCount = citations.filter(c => c.verificationStatus === 'partially_verified').length;
   const unverifiedCount = citations.filter(c => c.verificationStatus === 'unverified').length;
-  const notFoundCount = citations.filter(c => c.verificationStatus === 'source_not_found').length;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(groundedAnswer);
@@ -69,15 +68,10 @@ export const GroundedAnswerWorkspace: React.FC = () => {
           </span>
         );
       case 'unverified':
-        return (
-          <span className="legal-pill legal-pill-unverified">
-            <AlertTriangle size={10} /> Mismatch
-          </span>
-        );
       case 'source_not_found':
         return (
-          <span className="legal-pill legal-pill-notfound">
-            <HelpCircle size={10} /> Not Found
+          <span className="legal-pill legal-pill-unverified">
+            <AlertTriangle size={10} /> Not Verified
           </span>
         );
     }
@@ -137,7 +131,7 @@ export const GroundedAnswerWorkspace: React.FC = () => {
                   type="button"
                   className={`citation-chip-btn ${status}`}
                   onClick={() => handleCitationChipClick(marker)}
-                  title={citation ? `${citation.marker} ${citation.sourceDocumentTitle} (${citation.verificationStatus.replace('_', ' ')}) - Click to inspect audit` : marker}
+                  title={citation ? `${citation.marker} ${citation.sourceDocumentTitle} (${citation.verificationStatus.replace('_', ' ')}) - Click to inspect verification` : marker}
                 >
                   {marker}
                 </button>
@@ -165,19 +159,19 @@ export const GroundedAnswerWorkspace: React.FC = () => {
   };
 
   return (
-    <article className="response-workspace-card" aria-label="Legal Research Answer & Evidence Workspace">
+    <article className="response-workspace-card" aria-label="Legal Research Workspace">
       {/* Tab Switcher Header */}
       <div className="response-tabs-header">
         <div className="response-tabs-group" role="tablist">
           <button
             type="button"
             role="tab"
-            aria-selected={activeTab === 'answer'}
-            className={`response-tab-btn ${activeTab === 'answer' ? 'active' : ''}`}
-            onClick={() => setActiveTab('answer')}
+            aria-selected={activeTab === 'analysis'}
+            className={`response-tab-btn ${activeTab === 'analysis' ? 'active' : ''}`}
+            onClick={() => setActiveTab('analysis')}
           >
-            <FileCheck size={15} />
-            <span>AI Generated Synthesis</span>
+            <FileCheck size={14} />
+            <span>AI Legal Analysis</span>
           </button>
 
           <button
@@ -187,8 +181,8 @@ export const GroundedAnswerWorkspace: React.FC = () => {
             className={`response-tab-btn ${activeTab === 'sources' ? 'active' : ''}`}
             onClick={() => setActiveTab('sources')}
           >
-            <BookOpen size={15} />
-            <span>Retrieved Sources</span>
+            <BookOpen size={14} />
+            <span>Supporting Sources</span>
             <span className="tab-badge-pill">{supportingPassages.length}</span>
           </button>
 
@@ -199,8 +193,8 @@ export const GroundedAnswerWorkspace: React.FC = () => {
             className={`response-tab-btn ${activeTab === 'verification' ? 'active' : ''}`}
             onClick={() => setActiveTab('verification')}
           >
-            <ShieldCheck size={15} />
-            <span>Citation Verification Audit</span>
+            <ShieldCheck size={14} />
+            <span>Citation Verification</span>
             <span className="tab-badge-pill">{citations.length}</span>
           </button>
         </div>
@@ -211,16 +205,16 @@ export const GroundedAnswerWorkspace: React.FC = () => {
             type="button"
             className="btn-tool-action"
             onClick={handleCopy}
-            title="Copy answer synthesis to clipboard"
+            title="Copy answer text"
           >
             {copied ? <Check size={12} style={{ color: '#155e2e' }} /> : <Copy size={12} />}
-            <span>{copied ? 'Copied' : 'Copy'}</span>
+            <span>{copied ? 'Copied' : 'Copy Analysis'}</span>
           </button>
         </div>
       </div>
 
-      {/* Tab 1: AI Generated Response */}
-      {activeTab === 'answer' && (
+      {/* Tab 1: AI Legal Analysis */}
+      {activeTab === 'analysis' && (
         <div className="tab-content-container">
           <div className="editorial-answer-body">
             {renderFormattedAnswer(groundedAnswer)}
@@ -229,36 +223,31 @@ export const GroundedAnswerWorkspace: React.FC = () => {
           <div className="answer-summary-footer">
             <div className="citation-summary-badges">
               <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                Citation Verification:
+                Authority Status:
               </span>
               <span className="summary-stat-tag" style={{ color: 'var(--status-verified-text)' }}>
-                <CheckCircle2 size={12} /> {verifiedCount} Verified
+                <CheckCircle2 size={12} /> {verifiedCount} Verified Authorities
               </span>
               {partialCount > 0 && (
                 <span className="summary-stat-tag" style={{ color: 'var(--status-partial-text)' }}>
-                  <AlertTriangle size={12} /> {partialCount} Partial
+                  <AlertTriangle size={12} /> {partialCount} Partially Supported
                 </span>
               )}
               {unverifiedCount > 0 && (
                 <span className="summary-stat-tag" style={{ color: 'var(--status-unverified-text)' }}>
-                  <AlertTriangle size={12} /> {unverifiedCount} Mismatched
-                </span>
-              )}
-              {notFoundCount > 0 && (
-                <span className="summary-stat-tag" style={{ color: 'var(--status-notfound-text)' }}>
-                  <HelpCircle size={12} /> {notFoundCount} Not Found
+                  <AlertTriangle size={12} /> {unverifiedCount} Unverified
                 </span>
               )}
             </div>
 
             <span style={{ fontSize: '0.725rem', color: 'var(--text-subtle)' }}>
-              Click any citation badge <kbd style={{ fontFamily: 'var(--font-mono)' }}>[#]</kbd> to jump to source evidence
+              Click citation badge <kbd style={{ fontFamily: 'var(--font-mono)' }}>[#]</kbd> to view supporting legal evidence
             </span>
           </div>
         </div>
       )}
 
-      {/* Tab 2: Retrieved Legal Sources */}
+      {/* Tab 2: Supporting Sources */}
       {activeTab === 'sources' && (
         <div className="tab-content-container">
           <div className="sources-tab-list" role="list">
@@ -268,24 +257,8 @@ export const GroundedAnswerWorkspace: React.FC = () => {
                   <div>
                     <h4 className="source-card-title">{passage.documentTitle}</h4>
                     <div className="source-card-sub">
-                      {passage.citation} • Page {passage.pageNumber} {passage.paragraphNumber ? `(${passage.paragraphNumber})` : ''} • {passage.court}
+                      {passage.court} • {passage.citation} • Page {passage.pageNumber} {passage.paragraphNumber ? `(${passage.paragraphNumber})` : ''}
                     </div>
-                  </div>
-
-                  <div className="source-scores-pill-group">
-                    <span className="source-score-tag highlight" title="Reciprocal Rank Fusion Score">
-                      RRF: {passage.combinedScore.toFixed(3)}
-                    </span>
-                    {passage.bm25Score !== undefined && (
-                      <span className="source-score-tag" title="BM25 Lexical Keyword Score">
-                        BM25: {passage.bm25Score.toFixed(1)}
-                      </span>
-                    )}
-                    {passage.denseScore !== undefined && (
-                      <span className="source-score-tag" title="Dense Cosine Score">
-                        Dense: {passage.denseScore.toFixed(2)}
-                      </span>
-                    )}
                   </div>
                 </div>
 
@@ -293,14 +266,14 @@ export const GroundedAnswerWorkspace: React.FC = () => {
                   "{passage.excerpt}"
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.2rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.15rem' }}>
                   <button
                     type="button"
                     className="btn-ghost"
                     onClick={() => handleOpenPassageDoc(passage)}
                     style={{ fontSize: '0.725rem', padding: '0.2rem 0.4rem' }}
                   >
-                    <FileText size={11} /> View in Document Context
+                    <FileText size={11} /> View Source Context
                   </button>
                 </div>
               </div>
@@ -309,7 +282,7 @@ export const GroundedAnswerWorkspace: React.FC = () => {
         </div>
       )}
 
-      {/* Tab 3: Citation Verification Audit */}
+      {/* Tab 3: Citation Verification */}
       {activeTab === 'verification' && (
         <div className="tab-content-container">
           <div className="citations-audit-list" role="list">
@@ -328,7 +301,7 @@ export const GroundedAnswerWorkspace: React.FC = () => {
                       <span className="audit-marker-pill">{cit.marker}</span>
                       <div>
                         <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                          Asserted Proposition:
+                          Legal Proposition:
                         </span>
                         <h4 className="audit-claim-heading">"{cit.claimText}"</h4>
                       </div>
@@ -336,23 +309,23 @@ export const GroundedAnswerWorkspace: React.FC = () => {
 
                     <div className="audit-status-badge-group">
                       {renderStatusPill(cit.verificationStatus)}
-                      <span className="audit-confidence-text">
-                        ({Math.round(cit.confidenceScore * 100)}% match)
-                      </span>
                     </div>
                   </div>
 
                   {/* Supporting Source Excerpt */}
                   <div className="audit-source-block">
                     <div className="audit-source-header">
-                      <span>{cit.sourceDocumentTitle} (Page {cit.sourcePage})</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                        <Scale size={12} />
+                        {cit.sourceDocumentTitle} • Page {cit.sourcePage} {cit.sourceParagraph ? `(${cit.sourceParagraph})` : ''}
+                      </span>
                       <button
                         type="button"
                         className="btn-ghost"
                         onClick={() => handleOpenSource(cit)}
                         style={{ fontSize: '0.7rem', padding: '0.1rem 0.35rem', color: 'var(--brand-leather)' }}
                       >
-                        <ExternalLink size={10} /> Open Source Excerpt
+                        <ExternalLink size={10} /> Open Reference
                       </button>
                     </div>
 
@@ -361,12 +334,12 @@ export const GroundedAnswerWorkspace: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Entailment Rationale */}
+                  {/* Verification Evidence & Rationale */}
                   <div className="audit-rationale-box">
                     <Info size={13} style={{ color: 'var(--brand-leather)', flexShrink: 0, marginTop: '0.1rem' }} />
                     <div>
                       <strong style={{ color: 'var(--text-primary)', marginRight: '0.3rem' }}>
-                        Entailment Check:
+                        Verification Evidence:
                       </strong>
                       <span>{cit.verificationRationale}</span>
                     </div>

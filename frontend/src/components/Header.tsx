@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scale, Cpu, Layers } from 'lucide-react';
+import { Scale, Cpu, Layers, CheckCircle2 } from 'lucide-react';
 import { useLegalResearch } from '../context/LegalResearchContext';
 
 export const Header: React.FC = () => {
@@ -18,15 +18,15 @@ export const Header: React.FC = () => {
   return (
     <header className="header-container" role="banner">
       <div className="header-inner">
-        {/* Brand & Subtitle */}
+        {/* Brand & Trademark */}
         <div className="brand-section">
           <div className="brand-logo-icon">
             <Scale size={18} strokeWidth={2.2} />
           </div>
           <div className="brand-titles">
             <div className="brand-title">
-              LEXSPHERE
-              <span className="brand-title-badge">Legal Intelligence</span>
+              LEXSPHERE<span className="brand-trademark">™</span>
+              <span className="brand-title-badge">LEGAL INTELLIGENCE</span>
             </div>
             <span className="brand-subtitle">
               Hybrid RAG & Independent Citation Verification Workspace
@@ -34,14 +34,14 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Essential Navigation Controls Only */}
+        {/* Minimal Controls */}
         <div className="header-controls">
-          {/* Architecture & Pipeline Action */}
+          {/* Architecture & Pipeline Info Link */}
           <button 
             type="button"
             className="architecture-btn"
             onClick={() => setIsArchitectureModalOpen(true)}
-            title="Inspect retrieval pipeline architecture"
+            title="System architecture and pipeline overview"
           >
             <Layers size={13} />
             <span>Architecture & Pipeline</span>
@@ -65,36 +65,28 @@ export const Header: React.FC = () => {
             </button>
           </div>
 
-          {/* Corpus Status */}
+          {/* Legal Corpus Availability Status */}
           <button
             type="button"
             className="status-pill-btn"
             onClick={() => setIsBackendStatusModalOpen(true)}
-            title="Inspect backend and corpus status"
+            title="LexSphere verified legal corpus status"
           >
-            <span 
-              className={`status-dot ${
-                !isLive 
-                  ? 'demo' 
-                  : isHealthy 
-                    ? 'online' 
-                    : 'offline'
-              }`} 
-            />
+            <CheckCircle2 size={12} style={{ color: '#34d399' }} />
             <span>
               {!isLive 
-                ? `${documents.length} Corpus Docs` 
+                ? `${documents.length} Legal Documents Available` 
                 : isHealthy 
-                  ? `Live (${documents.length} Docs)` 
-                  : 'API Offline'
+                  ? `Live Backend (${documents.length} Documents)` 
+                  : 'Backend Offline'
               }
             </span>
           </button>
 
-          {/* Model Status */}
+          {/* Small Llama Powered Badge */}
           <div className="status-pill-btn" style={{ cursor: 'default' }}>
-            <Cpu size={13} style={{ color: 'var(--brand-gold)' }} />
-            <span>Llama 3 (Ollama)</span>
+            <Cpu size={12} style={{ color: 'var(--brand-gold)' }} />
+            <span>Powered by Llama</span>
           </div>
         </div>
       </div>

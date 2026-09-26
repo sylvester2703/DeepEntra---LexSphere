@@ -1,31 +1,43 @@
-/* Compact Enterprise Document Management Sidebar */
+/* LexSphere Legal Corpus Sidebar */
 .docs-sidebar {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 1.15rem;
+  padding: 1.25rem;
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 1rem;
 }
 
 .docs-sidebar-header {
   display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.docs-header-title-row {
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 0.65rem;
-  border-bottom: 1px solid var(--border-subtle);
 }
 
 .docs-header-title {
   font-family: var(--font-serif);
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 0.45rem;
+}
+
+.docs-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.35;
 }
 
 .docs-count-pill {
@@ -39,65 +51,6 @@
   border-radius: var(--radius-full);
 }
 
-/* Compact Upload Action Bar */
-.upload-compact-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.btn-upload-compact {
-  width: 100%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  background: var(--bg-surface-subtle);
-  border: 1px dashed var(--border-medium);
-  padding: 0.45rem 0.75rem;
-  border-radius: var(--radius-xs);
-  font-size: 0.775rem;
-  font-weight: 600;
-  color: var(--brand-leather);
-  transition: all var(--transition-fast);
-}
-
-.btn-upload-compact:hover {
-  background: var(--brand-leather-light);
-  border-color: var(--brand-leather);
-}
-
-/* Compact Search & Filter Input */
-.docs-search-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.docs-search-icon {
-  position: absolute;
-  left: 0.65rem;
-  color: var(--text-subtle);
-  pointer-events: none;
-}
-
-.docs-search-input {
-  width: 100%;
-  padding: 0.4rem 0.65rem 0.4rem 2rem;
-  border-radius: var(--radius-xs);
-  border: 1px solid var(--border-light);
-  background: var(--bg-surface);
-  font-size: 0.8rem;
-  color: var(--text-primary);
-  transition: all var(--transition-fast);
-}
-
-.docs-search-input:focus {
-  border-color: var(--brand-leather);
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(87, 51, 30, 0.08);
-}
-
 /* Category Filter Tags */
 .category-filter-row {
   display: flex;
@@ -109,12 +62,12 @@
 
 .cat-filter-btn {
   white-space: nowrap;
-  font-size: 0.7rem;
+  font-size: 0.725rem;
   font-weight: 500;
-  padding: 0.15rem 0.45rem;
+  padding: 0.2rem 0.5rem;
   border-radius: var(--radius-xs);
   background: var(--bg-surface-subtle);
-  color: var(--text-muted);
+  color: var(--text-secondary);
   border: 1px solid transparent;
   transition: all var(--transition-fast);
 }
@@ -125,138 +78,102 @@
 }
 
 .cat-filter-btn.active {
-  background: var(--bg-surface-active);
+  background: var(--brand-leather-light);
   color: var(--brand-leather);
   font-weight: 600;
   border-color: var(--border-medium);
 }
 
-/* Compact Document Cards List */
+/* 5 Curated Document Cards List */
 .docs-cards-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  max-height: 480px;
-  overflow-y: auto;
-  padding-right: 0.2rem;
+  gap: 0.65rem;
 }
 
-.compact-doc-card {
+.curated-doc-card {
   background: #ffffff;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
-  padding: 0.65rem 0.75rem;
+  padding: 0.85rem 0.95rem;
   transition: all var(--transition-fast);
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.45rem;
   cursor: pointer;
 }
 
-.compact-doc-card:hover {
+.curated-doc-card:hover {
   border-color: var(--border-medium);
   background: var(--bg-surface-subtle);
+  box-shadow: var(--shadow-xs);
 }
 
-.compact-doc-card.selected-for-search {
+.curated-doc-card.selected-for-search {
   border-color: var(--brand-leather);
   background: var(--bg-selected);
 }
 
-.doc-card-main-row {
+.curated-card-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.4rem;
+  gap: 0.5rem;
 }
 
-.doc-title-checkbox-group {
+.curated-title-group {
   display: flex;
   align-items: flex-start;
   gap: 0.45rem;
   flex: 1;
 }
 
-.doc-select-checkbox {
+.curated-checkbox {
   margin-top: 0.15rem;
   cursor: pointer;
   accent-color: var(--brand-leather);
 }
 
-.compact-doc-title {
+.curated-doc-title {
   font-family: var(--font-serif);
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-primary);
-  line-height: 1.25;
+  line-height: 1.3;
 }
 
-.compact-doc-sub {
+.curated-card-middle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 0.725rem;
   color: var(--text-muted);
-  margin-top: 0.1rem;
 }
 
-.doc-card-meta-row {
+.curated-court-year {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.curated-card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 0.7rem;
-  color: var(--text-subtle);
-  margin-top: 0.15rem;
-  padding-top: 0.3rem;
+  padding-top: 0.35rem;
   border-top: 1px dashed var(--border-subtle);
 }
 
-.doc-card-stats {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-mono);
+.curated-category-tag {
+  font-weight: 600;
+  color: var(--brand-leather);
 }
 
-.doc-inspect-link {
-  color: var(--brand-leather);
-  font-weight: 600;
-  font-size: 0.7rem;
+.curated-status-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.2rem;
-}
-
-.doc-inspect-link:hover {
-  text-decoration: underline;
-}
-
-/* Compact Ingestion Progress Bar */
-.compact-progress-box {
-  background: var(--bg-surface-subtle);
-  border-radius: var(--radius-xs);
-  padding: 0.35rem 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  margin-top: 0.2rem;
-}
-
-.progress-info-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.675rem;
-  font-weight: 600;
-  color: var(--brand-leather);
-}
-
-.progress-track {
-  width: 100%;
-  height: 3px;
-  background: var(--border-light);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: var(--brand-leather);
-  transition: width 0.3s ease;
+  gap: 0.25rem;
+  color: var(--status-verified-text);
+  font-weight: 500;
 }

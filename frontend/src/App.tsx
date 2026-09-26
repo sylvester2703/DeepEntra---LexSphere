@@ -2,9 +2,9 @@ import React from 'react';
 import { Header } from './components/Header';
 import { DocumentManager } from './components/DocumentManager';
 import { ResearchQueryInput } from './components/ResearchQueryInput';
-import { RetrievalPipelineAccordion } from './components/RetrievalPipelineAccordion';
 import { GroundedAnswerWorkspace } from './components/GroundedAnswerWorkspace';
 import { LoadingPipelineSkeleton } from './components/LoadingPipelineSkeleton';
+import { Footer } from './components/Footer';
 import { DocumentViewerModal } from './components/DocumentViewerModal';
 import { PipelineArchitectureModal } from './components/PipelineArchitectureModal';
 import { BackendStatusModal } from './components/BackendStatusModal';
@@ -16,8 +16,8 @@ import './styles/documents.css';
 import './styles/research.css';
 import './styles/answer.css';
 import './styles/evidence.css';
-import './styles/pipeline.css';
 import './styles/modal.css';
+import './styles/footer.css';
 
 export const AppContent: React.FC = () => {
   const { 
@@ -37,12 +37,12 @@ export const AppContent: React.FC = () => {
       {/* Main Legal Workspace */}
       <main className="main-content">
         <div className="workspace-grid">
-          {/* Left Column: Compact Legal Corpus Manager */}
+          {/* Left Column: Fixed 5 Curated Legal Documents */}
           <DocumentManager />
 
           {/* Right Column: Focused Research Workspace */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            {/* Search Query Area with Compact Benchmark Bar */}
+            {/* Search Query Area with Benchmark Selector */}
             <ResearchQueryInput />
 
             {/* Error Banner (if Live API fails) */}
@@ -74,24 +74,21 @@ export const AppContent: React.FC = () => {
               </div>
             )}
 
-            {/* Live Pipeline Execution Progress */}
+            {/* Live Execution Progress */}
             {isQuerying && (
               <LoadingPipelineSkeleton stage={pipelineStage} />
             )}
 
-            {/* Active Research Synthesis & Tabbed Evidence Workspace */}
+            {/* Active Research Synthesis & 3-Tab Workspace */}
             {!isQuerying && activeResearch && (
-              <>
-                {/* Collapsible Retrieval Pipeline Summary (Progressive Disclosure) */}
-                <RetrievalPipelineAccordion />
-
-                {/* Tabbed Legal Workspace (Answer, Sources, Citation Verification) */}
-                <GroundedAnswerWorkspace />
-              </>
+              <GroundedAnswerWorkspace />
             )}
           </div>
         </div>
       </main>
+
+      {/* Product Footer */}
+      <Footer />
 
       {/* Modals & Reference Lightboxes */}
       <DocumentViewerModal />
