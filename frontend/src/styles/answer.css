@@ -215,3 +215,12 @@
 @keyframes simple-explanation-spin {
   to { transform: rotate(360deg); }
 }
+
+/* One cited statement per line in the AI Legal Analysis */
+.editorial-answer-body p.answer-citation-line {
+  margin-bottom: 0.7rem;
+}
+
+.editorial-answer-body p.answer-citation-line:last-child {
+  margin-bottom: 0;
+}

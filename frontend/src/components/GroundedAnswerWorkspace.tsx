@@ -137,13 +137,18 @@ export const GroundedAnswerWorkspace: React.FC = () => {
    * Parse paragraphs and format inline citations as interactive chips
    */
   const renderFormattedAnswer = (text: string) => {
-    const paragraphs = text.split('\n\n');
+    // Each cited statement on its own line: break after a citation marker (or a run of
+    // markers like "[1] [2]") whenever more text follows
+    const lines = text
+      .split('\n\n')
+      .flatMap(para => para.split(/(?<=\])\s+(?=[^\s[])/g))
+      .filter(line => line.trim());
 
-    return paragraphs.map((para, pIdx) => {
+    return lines.map((para, pIdx) => {
       const parts = para.split(/(\[\d+\])/g);
 
       return (
-        <p key={pIdx}>
+        <p key={pIdx} className="answer-citation-line">
           {parts.map((part, idx) => {
             const isMarker = /^\[\d+\]$/.test(part.trim());
             if (isMarker) {
