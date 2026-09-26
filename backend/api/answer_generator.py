@@ -239,6 +239,71 @@ def foreign_authorities(answer: str, contexts: list[dict], passages: list[dict])
     return foreign
 
 
+PLAIN_SYSTEM_PROMPT = (
+    "You explain court decisions to people with no legal background, like a friendly, "
+    "helpful assistant. Use everyday words and short sentences. Do not use legal jargon, "
+    "Latin phrases, section numbers or case citations; if you must mention a legal idea, "
+    "explain it in plain words. Use ONLY the information you are given: do not add facts, "
+    "other cases or laws, and do not give personal legal advice."
+)
+
+NOT_COVERED_PLAIN = (
+    "We looked through the court decisions in our collection, but none of them actually "
+    "deals with this question. Rather than guess, LexSphere does not give an answer when "
+    "it cannot point to a real court decision that supports it."
+)
+
+
+def _strip_markup(text: str) -> str:
+    text = re.sub(r"\s*\[\d+\]", "", text)
+    return re.sub(r"\*\*(.*?)\*\*", r"\1", text).strip()
+
+
+def plain_language_explanation(
+    query: str, answer: str, quotes: list[dict], model: str | None
+) -> tuple[str, str]:
+    """Everyday-language explanation of a grounded answer and its quoted sources.
+    Returns (explanation, how it was produced)."""
+    if not quotes or answer.startswith(NOT_COVERED_ANSWER[:40]):
+        return NOT_COVERED_PLAIN, "fixed message (no supporting judgment)"
+
+    key_points = "\n".join(f"- {_strip_markup(q['claim_text'])}" for q in quotes)
+    if model:
+        cases = sorted({q["source_document_title"] for q in quotes})
+        user = (
+            f"Someone asked: \"{query}\"\n\n"
+            f"The court decision ({'; '.join(cases)}) says:\n{key_points}\n\n"
+            "Explain in 3 to 5 short, simple sentences what the court decided and what it "
+            "means in everyday life for the person asking. Start directly with the explanation."
+        )
+        body = json.dumps({
+            "model": model,
+            "messages": [{"role": "system", "content": PLAIN_SYSTEM_PROMPT},
+                         {"role": "user", "content": user}],
+            "stream": False,
+            "keep_alive": "30m",
+            "options": {"temperature": 0.2, "num_predict": 220, "num_ctx": 2048},
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            f"{OLLAMA_BASE_URL}/api/chat", data=body, headers={"Content-Type": "application/json"}
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=OLLAMA_TIMEOUT_S) as resp:
+                text = _strip_markup(json.load(resp).get("message", {}).get("content", ""))
+            sources = [{"text": key_points, "case_name": " ".join(cases), "citation": ""}]
+            if text and not foreign_authorities(text, sources, []):
+                return text, f"simplified by {model}"
+            logger.warning("Plain explanation rejected (empty or mentions outside authorities)")
+        except Exception as exc:
+            logger.warning("Plain explanation failed: %s", exc)
+
+    return (
+        "A plain-language explanation needs the local AI model (Ollama), which is not "
+        "available right now. These are the key points the court decision makes:\n\n" + key_points,
+        "key points only (Ollama unavailable)",
+    )
+
+
 def grounded_answer(
     query: str, passages: list[dict], reranker: CrossEncoderReranker, model: str | None
 ) -> tuple[GeneratedAnswer, list[dict], str]:

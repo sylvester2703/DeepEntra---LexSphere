@@ -162,3 +162,19 @@ def test_upload_rejects_non_pdf(client):
     assert res.status_code == 400
     res = client.post("/api/documents/upload", files={"file": ("notes.txt", b"hello", "text/plain")})
     assert res.status_code == 400
+
+
+def test_simple_explanation_endpoint(client):
+    # Ollama is disabled in this module, so the fallback lists the key points
+    res = client.post("/api/research/explain", json={
+        "query": "Can a landlord evict a tenant who sublet the shop?",
+        "answer": "The Supreme Court restored the decree of eviction. [1]",
+        "citations": [{"claim_text": "The Supreme Court restored the decree of eviction.",
+                       "source_document_title": "Rashmi Kant Vijay Chandra & Ors. v. Baijnath Choubey & Company"}],
+    })
+    assert res.status_code == 200
+    assert "restored the decree of eviction" in res.json()["explanation"]
+    not_covered = client.post("/api/research/explain", json={
+        "query": "What is the punishment for theft?",
+        "answer": answer_generator.NOT_COVERED_ANSWER, "citations": []}).json()
+    assert "none of them actually deals with this question" in not_covered["explanation"]

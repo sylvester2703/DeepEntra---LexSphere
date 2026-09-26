@@ -193,3 +193,29 @@
   gap: 0.3rem;
   font-weight: 500;
 }
+
+/* Simple Explanation tab (everyday-language version of the analysis) */
+.simple-explanation-body p {
+  font-family: var(--font-sans, inherit);
+}
+
+.simple-explanation-status {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.25rem 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.simple-explanation-error {
+  color: var(--status-unverified-text);
+}
+
+.simple-explanation-spinner {
+  animation: simple-explanation-spin 1s linear infinite;
+}
+
+@keyframes simple-explanation-spin {
+  to { transform: rotate(360deg); }
+}

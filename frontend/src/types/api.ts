@@ -87,6 +87,11 @@ export interface VerifyClaimResponse {
   rationale: string;
 }
 
+export interface SimpleExplanation {
+  explanation: string;
+  method: string; // how it was produced, e.g. "simplified by llama3.2:3b"
+}
+
 /**
  * Common service interface implemented by both DemoAdapter and LiveApiAdapter
  */
@@ -97,4 +102,5 @@ export interface ILegalApiService {
   getDocumentById(id: string): Promise<LegalDocument | null>;
   queryResearch(query: string, filters?: QueryFilters): Promise<ResearchAnswerResult>;
   verifyClaim(request: VerifyClaimRequest): Promise<VerifyClaimResponse>;
+  explainSimply(result: ResearchAnswerResult): Promise<SimpleExplanation>;
 }

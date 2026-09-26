@@ -6,6 +6,7 @@ Endpoints (paths and field names match frontend/src/services/legalApiService.ts)
     GET  /api/documents/{id}      one judgment
     POST /api/documents/upload    add a PDF to the corpus and re-index
     POST /api/research/query      hybrid retrieval + grounded answer + citation checks
+    POST /api/research/explain    everyday-language explanation of an answer
     POST /api/citations/verify    check one claim against a source passage
 
 Note: the frontend passes /api/health and /api/documents responses to the UI
@@ -35,6 +36,7 @@ from .answer_generator import (
     grounded_answer,
     ollama_status,
     ollama_warmup,
+    plain_language_explanation,
     prose_sentences,
     sigmoid,
 )
@@ -491,6 +493,33 @@ def _find_cited_document(reference: str, docs: dict[str, dict]) -> Optional[dict
         if first and respondent and first in ref and re.search(rf"\bv {re.escape(respondent[0])}\b", ref):
             return rec
     return None
+
+
+class ExplainQuote(BaseModel):
+    claim_text: str = Field(..., max_length=3000)
+    source_document_title: str = Field("", max_length=500)
+
+
+class ExplainRequest(BaseModel):
+    query: str = Field(..., min_length=1, max_length=2000)
+    answer: str = Field(..., max_length=20000)
+    citations: list[ExplainQuote] = Field(default_factory=list, max_length=20)
+
+
+@router.post("/research/explain", summary="Explain an answer and its citations in everyday language")
+def explain_simply(req: ExplainRequest) -> dict:
+    """Plain-language version of a research answer, for readers without legal training.
+    Called on demand (it adds an LLM call), using only the answer's quoted citations."""
+    started = time.perf_counter()
+    connected, model = ollama_status()
+    text, method = plain_language_explanation(
+        req.query, req.answer, [q.model_dump() for q in req.citations], model if connected else None
+    )
+    return {
+        "explanation": text,
+        "method": method,
+        "generation_time_ms": int((time.perf_counter() - started) * 1000),
+    }
 
 
 class VerifyClaimRequest(BaseModel):
