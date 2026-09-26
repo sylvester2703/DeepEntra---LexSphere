@@ -14,6 +14,8 @@ sentence-transformers>=3.0
 faiss-cpu>=1.8
 rank-bm25>=0.2.2
 numpy>=1.26
+# Research API (backend/api): file uploads for POST /api/documents/upload
+python-multipart>=0.0.9
 
 # Tests
 pytest>=8.0

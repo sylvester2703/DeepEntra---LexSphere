@@ -75,6 +75,8 @@ class RetrievedChunk:
     rrf_score: float
     dense_rank: Optional[int] = None  # 1-based rank in FAISS results, None if absent
     sparse_rank: Optional[int] = None  # 1-based rank in BM25 results, None if absent
+    dense_score: Optional[float] = None  # cosine similarity from FAISS
+    sparse_score: Optional[float] = None  # raw BM25 score
     citation: Optional[str] = None
     court: Optional[str] = None
     judgment_date: Optional[str] = None

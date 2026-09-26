@@ -20,6 +20,7 @@ import json
 import logging
 import sys
 import time
+from collections.abc import Iterable
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -57,6 +58,8 @@ class HybridRAGPipeline:
         self.reranker = CrossEncoderReranker(self.config.reranker_model)
         self.chunks: list[Chunk] = []
         self._retriever: HybridRetriever | None = None
+        # Candidate counts of the most recent query: {"dense": n, "sparse": n, "fused": n}
+        self.last_retrieval_stats: dict[str, int] = {}
         if auto_build:
             self.refresh()
 
@@ -184,14 +187,28 @@ class HybridRAGPipeline:
         )
 
     # -------------------------------------------------------------- retrieval
+    def warmup(self) -> None:
+        """Load both models now, so the first real query is not slow (call at server start)."""
+        if self._retriever is None:
+            self.refresh()
+        self.embedder.embed_query("warm up")
+        self.reranker.score("warm up", ["warm up"])
+
     def retrieve_chunks(
-        self, query: str, top_k: int | None = None, min_score: float | None = None
+        self,
+        query: str,
+        top_k: int | None = None,
+        min_score: float | None = None,
+        documents: Iterable[str] | None = None,
+        mode: str = "hybrid",
     ) -> list[RetrievedChunk]:
         """Hybrid retrieval -> RRF fusion -> cross-encoder rerank -> top-k chunks.
 
         min_score drops chunks whose cross-encoder score is below it. Scores are
         logits: above 0 usually means relevant, strongly negative means the
         corpus probably does not cover the question.
+        documents limits the search to these document names (None = all).
+        mode is "hybrid", "semantic" (FAISS only) or "bm25" (keywords only).
         """
         if top_k is None:
             top_k = self.config.final_top_k
@@ -205,7 +222,18 @@ class HybridRAGPipeline:
         if not self.chunks:
             return []
 
-        candidates = self._retriever.retrieve(query)
+        allowed = None
+        if documents is not None:
+            wanted = set(documents)
+            allowed = {i for i, c in enumerate(self.chunks) if c.document in wanted}
+            if not allowed:
+                return []
+        candidates = self._retriever.retrieve(query, allowed, mode)
+        self.last_retrieval_stats = {
+            "dense": sum(c.dense_rank is not None for c in candidates),
+            "sparse": sum(c.sparse_rank is not None for c in candidates),
+            "fused": len(candidates),
+        }
         passages = [self.chunks[c.position].search_text() for c in candidates]
         scores = self.reranker.score(query, passages)
         ranked = sorted(zip(candidates, scores), key=lambda pair: pair[1], reverse=True)
@@ -227,6 +255,8 @@ class HybridRAGPipeline:
                     rrf_score=round(cand.rrf_score, 6),
                     dense_rank=cand.dense_rank,
                     sparse_rank=cand.sparse_rank,
+                    dense_score=None if cand.dense_score is None else round(cand.dense_score, 4),
+                    sparse_score=None if cand.sparse_score is None else round(cand.sparse_score, 4),
                     citation=chunk.citation,
                     court=chunk.court,
                     judgment_date=chunk.judgment_date,
@@ -235,10 +265,15 @@ class HybridRAGPipeline:
         return results
 
     def retrieve(
-        self, query: str, top_k: int | None = None, min_score: float | None = None
+        self,
+        query: str,
+        top_k: int | None = None,
+        min_score: float | None = None,
+        documents: Iterable[str] | None = None,
+        mode: str = "hybrid",
     ) -> list[dict]:
         """Same as retrieve_chunks, returned as plain JSON-serialisable dicts."""
-        return [r.to_dict() for r in self.retrieve_chunks(query, top_k, min_score)]
+        return [r.to_dict() for r in self.retrieve_chunks(query, top_k, min_score, documents, mode)]
 
     @staticmethod
     def format_context(results: list[dict]) -> str:

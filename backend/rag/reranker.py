@@ -39,16 +39,20 @@ class CrossEncoderReranker:
         return _load_model(self.model_name)
 
     def score(self, query: str, passages: list[str]) -> list[float]:
-        if not passages:
+        return self.score_pairs([(query, p) for p in passages])
+
+    def score_pairs(self, pairs: list[tuple[str, str]]) -> list[float]:
+        """Score (query, passage) pairs; each passage is scored by its best window."""
+        if not pairs:
             return []
-        pairs: list[tuple[str, str]] = []
+        windowed: list[tuple[str, str]] = []
         owners: list[int] = []
-        for i, passage in enumerate(passages):
+        for i, (query, passage) in enumerate(pairs):
             for window in word_windows(passage, self.window_words, self.window_stride):
-                pairs.append((query, window))
+                windowed.append((query, window))
                 owners.append(i)
-        window_scores = self.model.predict(pairs, batch_size=self.batch_size, show_progress_bar=False)
-        best = [float("-inf")] * len(passages)
+        window_scores = self.model.predict(windowed, batch_size=self.batch_size, show_progress_bar=False)
+        best = [float("-inf")] * len(pairs)
         for owner, s in zip(owners, window_scores):
             best[owner] = max(best[owner], float(s))
         return best
