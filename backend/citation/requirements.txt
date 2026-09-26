@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pymupdf
+pdfplumber
+sentence-transformers
+faiss-cpu
+numpy
+python-dotenv
+langchain
+langchain-community
