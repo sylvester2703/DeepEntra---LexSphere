@@ -120,7 +120,7 @@
 
 .hero-metrics-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
   width: 100%;
   margin-top: 2.5rem;
@@ -158,7 +158,7 @@
     font-size: 2rem;
   }
   .hero-metrics-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
   }
 }
 

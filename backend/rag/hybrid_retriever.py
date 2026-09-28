@@ -57,14 +57,30 @@ class HybridRetriever:
         self.sparse_top_k = sparse_top_k
         self.rrf_k = rrf_k
 
-    def dense_search(self, query: str) -> list[tuple[int, float]]:
-        return self.vector_store.search(self.embedder.embed_query(query), self.dense_top_k)
+    def dense_search(self, query: str, allowed: set[int] | None = None) -> list[tuple[int, float]]:
+        query_vector = self.embedder.embed_query(query)
+        if allowed is None:
+            return self.vector_store.search(query_vector, self.dense_top_k)
+        # Restricted to some documents: rank everything (flat index = same cost), then filter
+        hits = self.vector_store.search(query_vector, len(self.vector_store))
+        return [h for h in hits if h[0] in allowed][: self.dense_top_k]
 
-    def sparse_search(self, query: str) -> list[tuple[int, float]]:
-        return self.bm25.search(query, self.sparse_top_k)
+    def sparse_search(self, query: str, allowed: set[int] | None = None) -> list[tuple[int, float]]:
+        if allowed is None:
+            return self.bm25.search(query, self.sparse_top_k)
+        hits = self.bm25.search(query, len(self.bm25.tokenized_corpus))
+        return [h for h in hits if h[0] in allowed][: self.sparse_top_k]
 
-    def retrieve(self, query: str) -> list[FusedCandidate]:
-        return reciprocal_rank_fusion(
-            {"dense": self.dense_search(query), "sparse": self.sparse_search(query)},
-            k=self.rrf_k,
-        )
+    def retrieve(
+        self, query: str, allowed: set[int] | None = None, mode: str = "hybrid"
+    ) -> list[FusedCandidate]:
+        """mode: "hybrid" (dense + BM25), "semantic" (dense only) or "bm25" (BM25 only).
+        allowed: chunk positions to search within (None = whole corpus)."""
+        if mode not in {"hybrid", "semantic", "bm25"}:
+            raise ValueError(f"Unknown search mode: {mode}")
+        ranked_lists: dict[str, list[tuple[int, float]]] = {}
+        if mode in {"hybrid", "semantic"}:
+            ranked_lists["dense"] = self.dense_search(query, allowed)
+        if mode in {"hybrid", "bm25"}:
+            ranked_lists["sparse"] = self.sparse_search(query, allowed)
+        return reciprocal_rank_fusion(ranked_lists, k=self.rrf_k)

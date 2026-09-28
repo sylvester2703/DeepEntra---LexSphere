@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
-import { 
-  FileCheck, 
-  Copy, 
-  Check, 
-  ShieldCheck, 
-  AlertTriangle, 
-  ExternalLink, 
-  BookOpen, 
-  FileText, 
-  Info, 
+import React, { useEffect, useState } from 'react';
+import {
+  FileCheck,
+  Copy,
+  Check,
+  ShieldCheck,
+  AlertTriangle,
+  ExternalLink,
   CheckCircle2,
-  Scale
+  Scale,
+  MessageCircle,
+  Loader2
 } from 'lucide-react';
 import { useLegalResearch } from '../context/LegalResearchContext';
-import { CitationItem, RetrievedPassage, CitationVerificationStatus } from '../types/legal';
+import { apiServiceManager } from '../services/legalApiService';
+import { CitationItem, CitationVerificationStatus } from '../types/legal';
+
+interface SimpleExplanationState {
+  queryId: string;
+  text: string;
+  method: string;
+}
 
 export const GroundedAnswerWorkspace: React.FC = () => {
   const { 
@@ -24,19 +30,44 @@ export const GroundedAnswerWorkspace: React.FC = () => {
     documents 
   } = useLegalResearch();
 
-  const [activeTab, setActiveTab] = useState<'analysis' | 'sources' | 'verification'>('analysis');
+  const [activeTab, setActiveTab] = useState<'analysis' | 'simple' | 'verification'>('analysis');
   const [copied, setCopied] = useState<boolean>(false);
+
+  // Plain-language explanation: generated only when its tab is opened, cached per query
+  const [simple, setSimple] = useState<SimpleExplanationState | null>(null);
+  const [simpleLoading, setSimpleLoading] = useState<boolean>(false);
+  const [simpleError, setSimpleError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (activeTab !== 'simple' || !activeResearch) return;
+    if (simple?.queryId === activeResearch.queryId) return;
+    let cancelled = false;
+    setSimpleLoading(true);
+    setSimpleError(null);
+    apiServiceManager.getService().explainSimply(activeResearch)
+      .then(res => {
+        if (!cancelled) setSimple({ queryId: activeResearch.queryId, text: res.explanation, method: res.method });
+      })
+      .catch(err => {
+        if (!cancelled) setSimpleError(err instanceof Error ? err.message : 'Could not create the explanation.');
+      })
+      .finally(() => {
+        if (!cancelled) setSimpleLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [activeTab, activeResearch, simple]);
 
   if (!activeResearch) return null;
 
-  const { groundedAnswer, citations, supportingPassages } = activeResearch;
+  const { groundedAnswer, citations } = activeResearch;
+  const simpleText = simple?.queryId === activeResearch.queryId ? simple.text : null;
 
   const verifiedCount = citations.filter(c => c.verificationStatus === 'verified').length;
   const partialCount = citations.filter(c => c.verificationStatus === 'partially_verified').length;
   const unverifiedCount = citations.filter(c => c.verificationStatus === 'unverified').length;
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(groundedAnswer);
+    navigator.clipboard.writeText(activeTab === 'simple' && simpleText ? simpleText : groundedAnswer);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -102,22 +133,22 @@ export const GroundedAnswerWorkspace: React.FC = () => {
     }
   };
 
-  const handleOpenPassageDoc = (passage: RetrievedPassage) => {
-    const doc = documents.find(d => d.id === passage.documentId);
-    if (doc) openDocModal(doc);
-  };
-
   /**
    * Parse paragraphs and format inline citations as interactive chips
    */
   const renderFormattedAnswer = (text: string) => {
-    const paragraphs = text.split('\n\n');
+    // Each cited statement on its own line: break after a citation marker (or a run of
+    // markers like "[1] [2]") whenever more text follows
+    const lines = text
+      .split('\n\n')
+      .flatMap(para => para.split(/(?<=\])\s+(?=[^\s[])/g))
+      .filter(line => line.trim());
 
-    return paragraphs.map((para, pIdx) => {
+    return lines.map((para, pIdx) => {
       const parts = para.split(/(\[\d+\])/g);
 
       return (
-        <p key={pIdx}>
+        <p key={pIdx} className="answer-citation-line">
           {parts.map((part, idx) => {
             const isMarker = /^\[\d+\]$/.test(part.trim());
             if (isMarker) {
@@ -177,13 +208,12 @@ export const GroundedAnswerWorkspace: React.FC = () => {
           <button
             type="button"
             role="tab"
-            aria-selected={activeTab === 'sources'}
-            className={`response-tab-btn ${activeTab === 'sources' ? 'active' : ''}`}
-            onClick={() => setActiveTab('sources')}
+            aria-selected={activeTab === 'simple'}
+            className={`response-tab-btn ${activeTab === 'simple' ? 'active' : ''}`}
+            onClick={() => setActiveTab('simple')}
           >
-            <BookOpen size={14} />
-            <span>Supporting Sources</span>
-            <span className="tab-badge-pill">{supportingPassages.length}</span>
+            <MessageCircle size={14} />
+            <span>Simple Explanation</span>
           </button>
 
           <button
@@ -208,7 +238,7 @@ export const GroundedAnswerWorkspace: React.FC = () => {
             title="Copy answer text"
           >
             {copied ? <Check size={12} style={{ color: '#155e2e' }} /> : <Copy size={12} />}
-            <span>{copied ? 'Copied' : 'Copy Analysis'}</span>
+            <span>{copied ? 'Copied' : activeTab === 'simple' ? 'Copy Explanation' : 'Copy Analysis'}</span>
           </button>
         </div>
       </div>
@@ -242,38 +272,30 @@ export const GroundedAnswerWorkspace: React.FC = () => {
         </div>
       )}
 
-      {/* Tab 2: Supporting Sources */}
-      {activeTab === 'sources' && (
+      {/* Tab 2: Simple Explanation (everyday language) */}
+      {activeTab === 'simple' && (
         <div className="tab-content-container">
-          <div className="sources-tab-list" role="list">
-            {supportingPassages.map((passage) => (
-              <div key={passage.id} className="source-item-card" role="listitem">
-                <div className="source-card-header">
-                  <div>
-                    <h4 className="source-card-title">{passage.documentTitle}</h4>
-                    <div className="source-card-sub">
-                      {passage.court} • {passage.citation} • Page {passage.pageNumber} {passage.paragraphNumber ? `(${passage.paragraphNumber})` : ''}
-                    </div>
-                  </div>
-                </div>
+          {simpleLoading && (
+            <div className="simple-explanation-status">
+              <Loader2 size={16} className="simple-explanation-spinner" />
+              <span>Explaining the answer in simple words… this can take up to a minute.</span>
+            </div>
+          )}
 
-                <div className="source-excerpt-text">
-                  "{passage.excerpt}"
-                </div>
+          {simpleError && !simpleLoading && (
+            <div className="simple-explanation-status simple-explanation-error">
+              <AlertTriangle size={14} />
+              <span>{simpleError}</span>
+            </div>
+          )}
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.15rem' }}>
-                  <button
-                    type="button"
-                    className="btn-ghost"
-                    onClick={() => handleOpenPassageDoc(passage)}
-                    style={{ fontSize: '0.725rem', padding: '0.2rem 0.4rem', color: 'var(--brand-leather)' }}
-                  >
-                    <FileText size={11} /> View Source Context
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+          {simpleText && !simpleLoading && (
+            <div className="editorial-answer-body">
+              {simpleText.split('\n\n').map((para, idx) => (
+                <p key={idx} style={{ whiteSpace: 'pre-line' }}>{para}</p>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -322,21 +344,6 @@ export const GroundedAnswerWorkspace: React.FC = () => {
                       >
                         <ExternalLink size={10} /> Open Reference
                       </button>
-                    </div>
-
-                    <div className="audit-source-excerpt">
-                      "{cit.sourceExcerpt}"
-                    </div>
-                  </div>
-
-                  {/* Verification Evidence & Rationale */}
-                  <div className="audit-rationale-box">
-                    <Info size={13} style={{ color: 'var(--brand-leather)', flexShrink: 0, marginTop: '0.1rem' }} />
-                    <div>
-                      <strong style={{ color: 'var(--text-primary)', marginRight: '0.3rem' }}>
-                        Verification Evidence:
-                      </strong>
-                      <span>{cit.verificationRationale}</span>
                     </div>
                   </div>
                 </div>

@@ -93,6 +93,78 @@ python -m rag.pipeline query "Right to speedy trial" --min-score 0
 
 ---
 
+## Running the full app (backend API + frontend)
+
+The frontend (`frontend/`, React + Vite) talks to the FastAPI app in `backend/main.py`.
+
+**1. Backend** (from `backend/`, with the virtual environment active):
+
+```bash
+uvicorn main:app --host 127.0.0.1 --port 8000
+```
+
+The server loads the index and models in the background. `/api/health` reports `"healthy"` after about 20–40 seconds.
+
+- API docs: http://127.0.0.1:8000/docs
+
+**2. Frontend** (from `frontend/`, needs Node.js 18+):
+
+Create `frontend/.env.local` (git-ignored). Without it the UI uses its built-in demo data:
+
+```
+VITE_API_BASE_URL=http://127.0.0.1:8000
+VITE_DEFAULT_MODE=live
+```
+
+Then start the dev server:
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:5173 and go to **Workspace**.
+
+**Endpoints used by the frontend** (`backend/api/research_api.py`):
+
+| Endpoint | What it does |
+|---|---|
+| `GET /api/health` | Index size and Ollama status |
+| `GET /api/documents`, `GET /api/documents/{id}` | Indexed judgments: case name, citation, date, category, summary, PDF link |
+| `POST /api/documents/upload` | Saves a PDF into the corpus folder and re-indexes |
+| `POST /api/research/query` | Hybrid retrieval, then a grounded answer with `[n]` citations, then a check of each citation against its source |
+| `POST /api/citations/verify` | Checks one claim against a source passage and/or a cited case |
+| `GET /corpus/<file>.pdf` | Serves the judgment PDFs |
+
+**How answers are produced.**
+
+1. Only passages the reranker judges relevant are used. If none are relevant, the API says the corpus does not cover the question instead of guessing.
+2. If [Ollama](https://ollama.com) is running, the model in `OLLAMA_MODEL` writes the answer. The default is `llama3.2:3b`, which takes about 30–60 s per answer on a CPU-only laptop. It sees only each relevant passage's best ~220-word window and must cite every sentence as `[n]`.
+3. The model's answer is checked before it is shown:
+   - sentences without a citation are removed;
+   - the answer is rejected if it names any case or citation that is not in the retrieved passages;
+   - the answer is rejected if any cited statement is not supported by its source (cross-encoder check).
+4. If there is no Ollama, or the answer was rejected, the answer is built from verbatim sentences of the relevant passages, each cited. `pipeline_metadata.ollama_model` says which path was used and why.
+
+**Setting up Ollama** (one time):
+
+```bash
+# Windows: winget install Ollama.Ollama   (macOS/Linux: see ollama.com/download)
+ollama pull llama3.2:3b
+```
+
+Ollama runs in the background after installation. The backend detects it automatically and preloads the model when it starts. On a machine with a GPU or more CPU power, `ollama pull llama3:8b` and set `OLLAMA_MODEL=llama3:8b` for better answers.
+
+Optional environment variables:
+- `OLLAMA_MODEL`
+- `OLLAMA_BASE_URL` (default `http://127.0.0.1:11434`)
+- `OLLAMA_TIMEOUT_S` (default 180)
+- `OLLAMA_ENABLED=0` to always use extractive answers
+
+PDFs added to `public/documents/judgments/` while the server is running are picked up on the next request.
+
+---
+
 ## Adding new legal PDFs
 
 1. Copy the PDF(s) into `public/documents/judgments/`. Sub-folders work too.
@@ -176,8 +248,14 @@ backend/
 ├── data/
 │   ├── processed/           cleaned pages and document metadata (generated)
 │   └── indexes/             FAISS, BM25, chunk metadata, manifest (generated)
+├── api/
+│   ├── research_api.py      FastAPI router for the frontend (/api/research/query, ...)
+│   └── answer_generator.py  Ollama / extractive grounded answers + citation checks
+├── citation/                Person 2's citation verification module (/api/verify-citation)
+├── main.py                  FastAPI app: mounts all routers, serves /corpus PDFs
 ├── tests/
-│   └── test_rag.py
+│   ├── test_rag.py
+│   └── test_api.py
 ├── requirements.txt
 └── README.md
 ```

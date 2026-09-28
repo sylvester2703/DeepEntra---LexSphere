@@ -18,8 +18,9 @@ import {
   ILegalApiService, 
   ResearchQueryRequest, 
   ResearchQueryApiResponse,
-  VerifyClaimRequest, 
-  VerifyClaimResponse 
+  VerifyClaimRequest,
+  VerifyClaimResponse,
+  SimpleExplanation
 } from '../types/api';
 
 import { 
@@ -36,6 +37,7 @@ export const API_ENDPOINTS = {
   DOCUMENT_DETAIL: (id: string) => `/api/documents/${encodeURIComponent(id)}`,
   RESEARCH_QUERY: '/api/research/query',
   VERIFY_CITATION: '/api/citations/verify',
+  EXPLAIN_SIMPLY: '/api/research/explain',
 } as const;
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -226,6 +228,31 @@ export class LiveFastApiAdapter implements ILegalApiService {
 
     return await response.json();
   }
+
+  async explainSimply(result: ResearchAnswerResult): Promise<SimpleExplanation> {
+    const response = await fetch(`${this.baseUrl}${API_ENDPOINTS.EXPLAIN_SIMPLY}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        query: result.query,
+        answer: result.groundedAnswer,
+        citations: result.citations.map(c => ({
+          claim_text: c.claimText,
+          source_document_title: c.sourceDocumentTitle
+        }))
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Simple explanation service failed (${response.status})`);
+    }
+
+    const data = await response.json();
+    return { explanation: data.explanation, method: data.method };
+  }
 }
 
 /**
@@ -322,6 +349,17 @@ export class DemoAdapter implements ILegalApiService {
       confidence_score: 0.94,
       entailment_type: 'direct_entailment',
       rationale: `The claim "${request.claim.substring(0, 60)}..." is entailed by the provided source passage context.`
+    };
+  }
+
+  async explainSimply(result: ResearchAnswerResult): Promise<SimpleExplanation> {
+    await new Promise(r => setTimeout(r, 600));
+    const points = result.citations.map(c => `- ${c.claimText}`).join('\n');
+    return {
+      explanation: points
+        ? `In simple terms, here is what the court decisions say:\n\n${points}`
+        : 'None of the documents in the demo collection deal with this question.',
+      method: 'demo mode'
     };
   }
 }

@@ -128,7 +128,7 @@
 .query-actions-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   flex-wrap: wrap;
   gap: 0.75rem;
 }
